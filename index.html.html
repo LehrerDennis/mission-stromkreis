@@ -1,0 +1,1066 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mission Stromkreis – v10.1 iPad Classroom Edition</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--ink:#152033;--muted:#667085;--accent:#3157d5;--accent2:#eef2ff;--ok:#137a4b;--okbg:#eaf8f0;--bad:#b42318;--badbg:#fff0ee;--line:#d8deea;--shadow:0 10px 30px rgba(20,32,51,.09)}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+button{font:inherit}.wrap{max-width:900px;margin:auto;padding:28px 18px 60px}.top{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:24px}.brand{font-weight:800;font-size:1.15rem}.pill{background:var(--accent2);color:var(--accent);padding:7px 11px;border-radius:999px;font-size:.86rem;font-weight:700}
+h1{font-size:clamp(2rem,5vw,3.2rem);line-height:1.05;margin:20px 0 10px}.lead{color:var(--muted);font-size:1.06rem;max-width:700px;margin:0 0 28px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:var(--shadow)}.quizcard{cursor:pointer;transition:.16s}.quizcard:hover{transform:translateY(-2px);border-color:#aeb9d6}.quizcard.locked{opacity:.55;cursor:not-allowed}.num{font-size:.8rem;color:var(--accent);font-weight:800;text-transform:uppercase;letter-spacing:.06em}.quizcard h2{font-size:1.2rem;margin:7px 0}.small{color:var(--muted);font-size:.9rem}.bar{height:8px;background:#e8ecf3;border-radius:999px;overflow:hidden;margin-top:14px}.fill{height:100%;background:var(--accent)}
+.hidden{display:none!important}.quizhead{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:18px}.back{border:0;background:transparent;color:var(--accent);font-weight:750;cursor:pointer;padding:8px 0}.progress{font-size:.9rem;color:var(--muted)}.question{font-size:1.35rem;font-weight:750;margin:12px 0 18px}.visual{background:#fbfcfe;border:1px solid var(--line);border-radius:16px;padding:16px;margin:0 0 18px;text-align:center}.visual svg{max-width:100%;height:auto}.answers{display:grid;gap:10px}.answer{width:100%;text-align:left;border:1.5px solid var(--line);background:#fff;border-radius:13px;padding:14px 15px;cursor:pointer;transition:.12s}.answer:hover{border-color:#8fa1d8;background:#fafbff}.answer.selected{border-color:var(--accent);background:var(--accent2)}.answer.correct{border-color:var(--ok);background:var(--okbg)}.answer.wrong{border-color:var(--bad);background:var(--badbg)}.actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}.primary,.secondary{border:0;border-radius:11px;padding:11px 16px;font-weight:750;cursor:pointer}.primary{background:var(--accent);color:#fff}.primary:disabled{opacity:.4;cursor:not-allowed}.secondary{background:#e9edf5;color:var(--ink)}.feedback{margin-top:16px;padding:14px 16px;border-radius:13px;line-height:1.45}.feedback.ok{background:var(--okbg);color:#0b5d38}.feedback.bad{background:var(--badbg);color:#8f1d14}.result{text-align:center;padding:15px}.score{font-size:4rem;font-weight:850;color:var(--accent);margin:10px 0}.result h2{font-size:1.8rem}.result p{color:var(--muted)}.footerNote{margin-top:28px;color:var(--muted);font-size:.85rem;text-align:center}
+.symbol-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.symbol-option{min-height:105px;display:flex;align-items:center;justify-content:center}.tag{display:inline-block;background:#f0f2f6;border-radius:7px;padding:3px 7px;font-size:.78rem;color:#505a6b;margin-bottom:6px}
+.switchHint{font-size:.9rem;color:var(--muted);margin-top:8px}
+.simSwitch{cursor:pointer}.simSwitch:hover circle{stroke:#3157d5;stroke-width:3}.simLamp{cursor:pointer}.simLamp:hover circle{stroke:#3157d5;stroke-width:3}.removedLamp{opacity:.32}
+.truth{border-collapse:collapse;margin:10px auto 0}.truth th,.truth td{border:1px solid var(--line);padding:8px 13px;text-align:center}.truth th{background:#f2f4f8}
+.lampGlow{filter:drop-shadow(0 0 7px #f2b705)}
+
+.hero{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(250px,.75fr);gap:22px;align-items:center;margin:18px 0 26px;padding:28px;background:linear-gradient(135deg,#ffffff 0%,#eef3ff 100%);border:1px solid var(--line);border-radius:26px;box-shadow:var(--shadow);overflow:hidden}
+.hero h1{margin:0 0 12px}.hero .lead{margin:0}.heroArt{display:flex;justify-content:center;align-items:center}.heroArt svg{width:min(100%,280px);height:auto}
+.dashboard{display:grid;grid-template-columns:1.4fr .6fr;gap:16px;margin:0 0 22px}.dashboardCard{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--shadow)}
+.overallRow{display:flex;justify-content:space-between;gap:12px;align-items:end}.overallBig{font-size:1.8rem;font-weight:850;color:var(--accent)}.energy{font-weight:850;color:#9a6500}
+.quizcard{position:relative;overflow:hidden;min-height:210px}.quizIcon{height:74px;margin:-4px 0 8px;display:flex;align-items:center;justify-content:flex-start}.quizIcon svg{height:70px;width:125px;max-width:100%}.quizMeta{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:10px}.stars{letter-spacing:2px;color:#e2a300;font-size:.95rem}.doneBadge{font-size:.76rem;font-weight:800;color:var(--ok);background:var(--okbg);padding:4px 7px;border-radius:999px}
+.questTop{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;margin-bottom:12px}.questMeter{height:10px;background:#e8ecf3;border-radius:999px;overflow:hidden}.questMeter>div{height:100%;background:linear-gradient(90deg,#3157d5,#6d83e8);transition:width .2s}.energyMini{font-weight:800;color:#8b6200;white-space:nowrap}
+.companion{display:flex;gap:12px;align-items:center;background:#f7f9ff;border:1px solid #dfe5f4;border-radius:14px;padding:10px 12px;margin:0 0 14px}.companion svg{width:54px;height:54px;flex:0 0 auto}.companionText{font-size:.9rem;color:#566176}.companionText strong{color:var(--ink)}
+.resultHero{display:grid;grid-template-columns:170px 1fr;gap:22px;align-items:center;text-align:left}.resultHero svg{width:160px}.resultStats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}.statBox{background:#f7f9fc;border:1px solid var(--line);border-radius:14px;padding:13px;text-align:center}.statBox strong{display:block;font-size:1.3rem}.result .score{margin:0}.resultActions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:18px}
+@media(max-width:700px){.hero{grid-template-columns:1fr;padding:21px}.heroArt{order:-1}.heroArt svg{width:190px}.dashboard{grid-template-columns:1fr}.resultHero{grid-template-columns:1fr;text-align:center}.resultHero svg{margin:auto}.resultStats{grid-template-columns:1fr 1fr}.quizcard{min-height:190px}}
+
+
+:root{--gold:#f3b61f;--goldsoft:#fff7dc;--navy:#17223b}
+body{background:radial-gradient(circle at 85% 0%,#eef2ff 0,transparent 30%),linear-gradient(#f8faff,#f5f7fb)}
+.hero{position:relative;border:1px solid #dfe5f5;background:linear-gradient(135deg,#fff 0%,#f3f6ff 62%,#fff8df 100%)}
+.hero:after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:rgba(245,197,66,.12);right:-65px;top:-75px}
+.missionKicker{display:inline-flex;align-items:center;gap:7px;background:#17223b;color:#fff;border-radius:999px;padding:7px 11px;font-size:.76rem;font-weight:850;letter-spacing:.04em;text-transform:uppercase}
+.batteryWrap{margin-top:15px;max-width:360px}.batteryHead{display:flex;justify-content:space-between;font-size:.8rem;font-weight:750;margin-bottom:6px}.battery{height:18px;border:3px solid #17223b;border-radius:6px;padding:2px;position:relative;background:#fff}.battery:after{content:"";position:absolute;right:-8px;top:3px;width:6px;height:8px;border-radius:0 3px 3px 0;background:#17223b}.batteryFill{height:100%;border-radius:2px;background:linear-gradient(90deg,#f3b61f,#ffd965);transition:width .35s}
+.pathTitle{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:26px 0 12px}.pathTitle h2{margin:0}.learningPath{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;position:relative}.learningPath:before{content:"";position:absolute;left:7%;right:7%;top:45px;height:3px;background:#dfe5f4;z-index:0}
+.quizcard{z-index:1;min-height:270px;transition:transform .18s,box-shadow .18s,border-color .18s}.quizcard:hover{transform:translateY(-3px);border-color:#bdc9ef;box-shadow:0 14px 34px rgba(38,55,99,.12)}.quizcard .num{display:inline-block;background:#eef2ff;padding:5px 8px;border-radius:999px}.quizIcon{height:82px;margin:7px 0}.quizIcon svg{height:80px;width:140px}.cardAction{margin-top:12px;display:flex;justify-content:space-between;align-items:center}.cardAction .go{font-weight:850;color:var(--accent)}
+.stageLabel{grid-column:1/-1;font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:#75809a;font-weight:850;margin-top:8px}
+.mastered{font-weight:850;color:#3157d5}
+.interactiveBadge{display:inline-flex;align-items:center;gap:6px;background:#eef3ff;color:#3157d5;font-weight:850;font-size:.76rem;padding:5px 8px;border-radius:999px;margin-bottom:8px}
+.feedback .memory{display:block;margin-top:9px;padding-top:9px;border-top:1px solid rgba(0,0,0,.08);font-weight:750}
+.competencies{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:16px 0}.competency{border:1px solid var(--line);border-radius:14px;padding:12px;background:#fbfcff}.competencyTop{display:flex;justify-content:space-between;gap:8px;font-size:.84rem;font-weight:800}.competency .bar{margin-top:8px}
+.errorBtn{background:#fff7dc!important;color:#6e5100!important;border:1px solid #ecd274!important}
+.missionComplete{margin:22px 0 0;padding:20px;border:1px solid #ead591;background:linear-gradient(135deg,#fffdf4,#fff7dc);border-radius:20px;display:grid;grid-template-columns:90px 1fr;gap:15px;align-items:center}.missionComplete h3{margin:0 0 5px}
+@media(max-width:980px){.learningPath{grid-template-columns:repeat(2,1fr)}.learningPath:before{display:none}}
+@media(max-width:620px){.learningPath{grid-template-columns:1fr}.competencies{grid-template-columns:1fr}.missionComplete{grid-template-columns:1fr;text-align:center}}
+
+
+/* ===== v10 STORY LAYER ===== */
+.storyLink{border:0;background:transparent;color:var(--accent);font-weight:850;padding:7px 10px;cursor:pointer}
+.storyLink:hover{background:var(--accentSoft);border-radius:999px}
+.workshop{margin:20px 0 26px;border:1px solid #dfe5f0;border-radius:26px;overflow:hidden;background:#111a2e;box-shadow:var(--shadow-md);position:relative}
+.workshopScene{min-height:245px;position:relative;display:grid;grid-template-columns:1.2fr .8fr;align-items:center;padding:26px 34px;color:#fff;background:linear-gradient(135deg,#111a2e,#1c2b50)}
+.workshopScene:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 74% 28%,rgba(92,130,255,var(--labGlow,.08)),transparent 22%),radial-gradient(circle at 18% 70%,rgba(243,182,31,var(--labWarm,.04)),transparent 20%);pointer-events:none}
+.workshopCopy{position:relative;z-index:1}.workshopCopy h2{font-size:1.7rem;margin:5px 0 8px;color:#fff}.workshopCopy p{color:#c9d3ea;max-width:570px;line-height:1.55}
+.workshopStatus{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.labChip{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.13);padding:6px 9px;border-radius:999px;font-size:.78rem;font-weight:800}
+.workshopArt{position:relative;z-index:1;display:flex;justify-content:center}.workshopArt svg{max-width:300px;width:100%;filter:drop-shadow(0 18px 22px rgba(0,0,0,.28))}
+.goalStation{margin:28px 0 10px;border-radius:24px;padding:24px 26px;border:1px solid #d8dfed;background:linear-gradient(135deg,#f9fbff,#eef2fa);display:grid;grid-template-columns:86px 1fr auto;gap:18px;align-items:center;position:relative;overflow:hidden}
+.goalStation.locked{filter:saturate(.72)}.goalStation.ready{background:linear-gradient(135deg,#fffdf3,#fff3bd);border-color:#e8cd66;box-shadow:0 12px 34px rgba(196,143,0,.12)}
+.goalIcon{width:78px;height:78px;border-radius:22px;background:#17223b;color:#fff;display:flex;align-items:center;justify-content:center;font-size:2rem;box-shadow:var(--shadow-sm)}
+.goalStation.ready .goalIcon{background:#f3b61f;color:#17223b;animation:goalPulse 1.8s infinite}
+@keyframes goalPulse{50%{box-shadow:0 0 0 9px rgba(243,182,31,.14)}}
+.goalStation h3{margin:0 0 5px}.goalStation p{margin:0;color:var(--muted);line-height:1.45}.goalNeed{font-weight:900;color:var(--accent);margin-top:8px}
+.goalButton{white-space:nowrap}.goalButton:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.milestone{margin:18px 0;padding:12px 15px;border-radius:16px;background:#f7f9ff;border:1px solid #dfe5f4;display:flex;align-items:center;gap:12px}.milestone svg{width:52px;flex:0 0 auto}.milestone strong{display:block;margin-bottom:2px}
+
+/* full-screen comic */
+.storyOverlay{position:fixed;inset:0;z-index:9999;background:rgba(9,15,29,.82);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:22px}
+.storyOverlay.hidden{display:none}
+.storyPanel{width:min(980px,100%);max-height:94vh;background:#fff;border-radius:30px;overflow:hidden;box-shadow:0 35px 100px rgba(0,0,0,.35);display:grid;grid-template-rows:minmax(300px,1fr) auto}
+.storyVisual{min-height:460px;background:#10192c;position:relative;overflow:hidden}
+.storyVisual svg{width:100%;height:100%;display:block;min-height:460px}
+.speech{position:absolute;left:6%;top:7%;max-width:48%;background:#fff;color:#17223b;border-radius:20px;padding:16px 18px;font-size:1.08rem;line-height:1.45;font-weight:700;box-shadow:0 10px 28px rgba(0,0,0,.18)}
+.speech:after{content:"";position:absolute;left:38px;bottom:-13px;border:14px solid transparent;border-top-color:#fff;border-left:0}
+.storyCaption{position:absolute;left:5%;right:5%;bottom:5%;background:rgba(9,15,29,.84);color:#fff;border:1px solid rgba(255,255,255,.13);border-radius:17px;padding:13px 16px;line-height:1.45}
+.storyControls{padding:15px 18px;background:#fff;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px}
+.storyDots{display:flex;gap:7px;justify-content:center}.storyDot{width:8px;height:8px;border-radius:50%;background:#d5dbe8}.storyDot.active{background:var(--accent);transform:scale(1.25)}
+.storyNext{justify-self:end}.storySkip{justify-self:start}
+.bigSwitch{cursor:pointer;filter:drop-shadow(0 10px 15px rgba(0,0,0,.25))}.bigSwitch:hover{filter:drop-shadow(0 0 12px rgba(243,182,31,.75))}
+.systemFlash{animation:systemFlash .7s ease-out}@keyframes systemFlash{50%{filter:brightness(1.7)}}
+@media(max-width:720px){
+ .workshopScene{grid-template-columns:1fr;padding:22px}.workshopArt{max-height:180px}.workshopArt svg{max-height:180px}
+ .goalStation{grid-template-columns:65px 1fr}.goalIcon{width:60px;height:60px}.goalButton{grid-column:1/-1;width:100%}
+ .storyOverlay{padding:8px}.storyPanel{border-radius:20px}.storyVisual,.storyVisual svg{min-height:430px}.speech{max-width:82%;font-size:.98rem}.storyControls{grid-template-columns:auto 1fr auto}
+}
+
+
+/* ===== v10.1 iPad Classroom hardening ===== */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{-webkit-tap-highlight-color:transparent;overscroll-behavior-y:none}
+button,.answer,.simSwitch,.simLamp,.bigSwitch{-webkit-user-select:none;user-select:none;touch-action:manipulation}
+button,.answer{min-height:48px}
+.storyOverlay{height:100vh;height:100dvh;overflow:auto;-webkit-overflow-scrolling:touch;padding:max(8px,env(safe-area-inset-top)) max(8px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left))}
+.storyPanel{max-height:calc(100vh - 16px);max-height:calc(100dvh - 16px)}
+.storyControls{padding-bottom:max(15px,env(safe-area-inset-bottom))}
+.visual svg{touch-action:manipulation}
+/* Make interactive SVG controls easier to tap without changing their visible symbol. */
+.simSwitch,.simLamp{cursor:pointer;pointer-events:all}
+.simSwitch:before,.simLamp:before{content:''}
+
+/* Small/classroom iPads: keep path, tasks and story comfortably readable. */
+@media (min-width:700px) and (max-width:900px){
+ .wrap{max-width:100%;padding-left:18px;padding-right:18px}
+ .hero{min-height:310px;padding:28px 30px}.hero h1{font-size:2.7rem}.heroArt svg{max-width:230px}
+ .quizcard,.quizcard:nth-of-type(even){width:calc(100% - 58px);margin-left:58px;grid-template-columns:100px 1fr}
+ .quizcard:before{left:-34px}.quizcard:after{left:-39px}.stageLabel{padding-left:62px}.stageLabel:before{left:25px}
+ #quiz{max-width:780px}.visual{padding:14px}.visual svg{max-height:350px}
+ .answer{font-size:1rem;padding:13px 15px}
+ .storyPanel{width:min(900px,100%)}.storyVisual,.storyVisual svg{min-height:400px}
+ .speech{font-size:1rem;max-width:52%;padding:14px 16px}.storyCaption{font-size:.95rem}
+ .workshopScene{padding:23px 26px}.workshopArt svg{max-width:250px}
+}
+/* Portrait iPad: one-column learning path and less crowded story composition. */
+@media (orientation:portrait) and (max-width:900px){
+ .hero{grid-template-columns:1fr}.heroArt{display:none}
+ .quizcard,.quizcard:nth-of-type(even){width:calc(100% - 44px);margin-left:44px}
+ .quizcard:before{left:-27px}.quizcard:after{left:-32px}
+ .stageLabel{padding-left:49px}.stageLabel:before{left:21px}
+ .workshopScene{grid-template-columns:1fr .55fr;gap:10px}
+ .goalStation{grid-template-columns:70px 1fr}.goalButton{grid-column:1/-1;width:100%}
+ .storyVisual,.storyVisual svg{min-height:420px}
+ .speech{max-width:76%;left:5%;top:5%}.storyCaption{left:4%;right:4%;bottom:4%}
+}
+/* Landscape iPad: Safari chrome can steal vertical room. */
+@media (orientation:landscape) and (max-height:700px){
+ .storyPanel{grid-template-rows:minmax(260px,1fr) auto}
+ .storyVisual,.storyVisual svg{min-height:310px}
+ .speech{top:4%;font-size:.94rem;padding:11px 13px;max-width:48%}
+ .storyCaption{bottom:3%;font-size:.88rem;padding:9px 12px}
+ .storyControls{padding-top:9px;padding-bottom:max(9px,env(safe-area-inset-bottom))}
+ #quiz>.card{padding:22px}.companion{min-height:45px}.companionText{font-size:.9rem}
+}
+@media(max-width:520px){
+ #question{font-size:1.22rem}.visual{padding:9px}.answer{font-size:.98rem}
+ .storyVisual,.storyVisual svg{min-height:390px}.speech{max-width:88%;font-size:.93rem}.storyCaption{font-size:.88rem}
+}
+
+@media(max-width:600px){.wrap{padding:18px 12px 40px}.card{padding:16px}.question{font-size:1.18rem}.symbol-grid{grid-template-columns:1fr}}
+
+.simSwitch,.simLamp{stroke-linecap:round;stroke-linejoin:round}
+.simSwitch:hover,.simLamp:hover{outline:none}
+
+</style>
+<style>
+.visual-choice{position:relative;padding-top:30px}
+.visual-choice .choice-label{position:absolute;top:5px;left:8px;width:25px;height:25px;border-radius:50%;background:#17223b;color:white;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px}
+</style>
+<style id="v9-final-polish">
+:root{--accent:#3157d5;--ink:#17223b;--muted:#69758d;--gold:#f3b61f;--line:#dfe5f0;--bg:#f5f7fb;--shadow2:0 14px 38px rgba(29,43,76,.11)}
+body{background:radial-gradient(circle at 92% 2%,rgba(49,87,213,.08),transparent 25rem),radial-gradient(circle at 3% 35%,rgba(243,182,31,.055),transparent 20rem),var(--bg)}
+.wrap{max-width:1120px}.hero{min-height:350px;padding:38px 42px;border-radius:32px;box-shadow:var(--shadow2)}.hero h1{font-size:clamp(2.15rem,5vw,3.5rem);line-height:1.03;letter-spacing:-.045em}.hero .lead{font-size:1.06rem;line-height:1.65}.heroArt svg{filter:drop-shadow(0 18px 20px rgba(36,70,187,.12))}
+.learningPath{display:block!important;padding:8px 0}.learningPath:before{display:none!important}.stageLabel{margin:30px 0 12px;padding-left:62px;position:relative}.stageLabel:before{content:"";position:absolute;left:25px;top:0;width:13px;height:13px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 7px #edf2ff}
+.quizcard,.quizcard:nth-of-type(even){width:calc(50% - 48px);min-height:0;margin:0 0 18px 62px;padding:21px 23px;display:grid;grid-template-columns:108px 1fr;column-gap:18px;align-items:center;overflow:visible;position:relative}.quizcard:nth-of-type(even){margin-left:calc(50% + 32px)}.quizcard:before{content:"";position:absolute;left:-35px;top:-28px;bottom:-28px;width:3px;background:#dbe2f1}.quizcard:after{content:"";position:absolute;left:-40px;top:50%;width:13px;height:13px;border-radius:50%;background:#fff;border:3px solid var(--accent)}
+.quizcard .quizIcon{grid-column:1;grid-row:1/8;margin:0;height:auto}.quizcard .quizIcon svg{width:102px;height:78px}.quizcard .num,.quizcard h2,.quizcard>.small,.quizcard .bar,.quizcard .quizMeta,.quizcard .cardAction{grid-column:2}.quizcard h2{margin:5px 0 4px;font-size:1.17rem}.quizcard .stars{display:none}.quizcard:hover{transform:translateY(-2px);box-shadow:var(--shadow2)}
+#quiz{max-width:900px;margin:0 auto}.questTop{background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 11px 7px 14px}.questMeter{height:7px}.companion{background:transparent;border:0;padding:3px 8px;margin:4px 0 5px;justify-content:flex-end}.companionText{background:#fff;border:1px solid var(--line);border-radius:14px;padding:8px 11px;max-width:510px;box-shadow:0 4px 14px rgba(29,43,76,.06)}#quiz>.card{border-radius:24px;padding:clamp(20px,4vw,34px);box-shadow:var(--shadow2)}#qtag{display:inline-flex;background:#edf2ff;color:var(--accent);padding:6px 9px;border-radius:999px;font-size:.75rem;font-weight:900;letter-spacing:.04em;text-transform:uppercase}#question{font-size:clamp(1.25rem,3vw,1.7rem);line-height:1.35;letter-spacing:-.02em;margin:13px 0 18px}.visual{border-radius:18px;background:linear-gradient(180deg,#fbfcff,#f7f9fc);border:1px solid #e7ebf3;padding:18px}.answer{border-radius:14px;min-height:52px;transition:transform .13s,border-color .13s,box-shadow .13s}.answer:hover{transform:translateY(-1px);border-color:#aebce9;box-shadow:0 4px 14px rgba(29,43,76,.06)}.simSwitch{transition:filter .16s}.simSwitch:hover{filter:drop-shadow(0 0 5px rgba(49,87,213,.48))}.lampGlow{filter:drop-shadow(0 0 8px rgba(243,182,31,.48));transition:filter .22s}.feedback{border-radius:16px;animation:v9in .22s ease-out}@keyframes v9in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.result{border-radius:28px!important;padding:clamp(24px,5vw,42px)!important;box-shadow:0 24px 60px rgba(29,43,76,.13)!important}.result .score{font-size:3.1rem;letter-spacing:-.05em;color:var(--accent);font-weight:950}.statBox,.competency{border-radius:16px}.resultActions{padding-top:8px}.errorBtn{font-weight:850}
+button{transition:transform .13s,box-shadow .13s}button:hover{transform:translateY(-1px)}
+@media(max-width:900px){.quizcard,.quizcard:nth-of-type(even){width:calc(100% - 62px);margin-left:62px}.hero{padding:30px}}
+@media(max-width:650px){.hero{padding:23px;min-height:0}.quizcard,.quizcard:nth-of-type(even){width:calc(100% - 32px);margin-left:32px;grid-template-columns:80px 1fr;padding:18px}.quizcard:before{left:-20px}.quizcard:after{left:-25px}.quizcard .quizIcon svg{width:76px}.stageLabel{padding-left:40px}.stageLabel:before{left:16px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body><main class="wrap">
+<section id="home">
+<div class="top"><div class="brand">⚡ Stromkreise</div><div style="display:flex;align-items:center;gap:6px"><button class="storyLink" onclick="openStory('intro')">Geschichte ansehen</button><div class="pill">Physik · Klasse 7</div></div></div>
+<div class="hero">
+  <div><div class="missionKicker">⚡ Mission Stromkreis</div><h1>Bring Volt auf volle Energie!</h1>
+  <p class="lead">Acht Missionen führen dich vom einfachen Stromkreis bis zu kniffligen Schaltungen. Meistere Aufgaben, lade Volts Akku und arbeite dich Schritt für Schritt zum Stromkreis-Profi vor.</p>
+<div class="batteryWrap"><div class="batteryHead"><span>Volts Akku</span><span id="batteryText">0 / 890 EP</span></div><div class="battery"><div id="batteryFill" class="batteryFill" style="width:0%"></div></div></div></div>
+  <div class="heroArt" id="heroVolt"></div>
+</div>
+<div id="workshop" class="workshop"></div>
+<div class="dashboard">
+ <div class="dashboardCard"><div class="overallRow"><div><div class="small">Gesamtfortschritt</div><div id="overallText" class="overallBig">0 von 8 Quizzen</div></div><div id="overallPct" class="pill">0 %</div></div><div class="bar" style="height:11px"><div id="overallFill" class="fill" style="width:0%"></div></div></div>
+ <div class="dashboardCard"><div class="small">Volts Energie</div><div id="energyTotal" class="overallBig energy">⚡ 0 EP</div><div class="small">Beste Ergebnisse aller Quizze</div></div>
+</div>
+<div class="pathTitle"><div><div class="small">DEIN LERNPFAD</div><h2>Dein Weg zum Stromkreis-Profi</h2></div><div id="masteredText" class="mastered">0 von 89 Aufgaben gemeistert</div></div>
+<div id="cards" class="learningPath"></div>
+<div id="milestone"></div><div id="goalStation"></div><div id="missionComplete"></div><div class="footerNote">Dein Lernstand bleibt ausschließlich auf diesem Gerät im Browser gespeichert.</div>
+</section>
+<section id="quiz" class="hidden"><div class="quizhead"><button class="back" onclick="goHome()">← Übersicht</button><div id="progress" class="progress"></div></div>
+<div class="questTop"><div class="questMeter"><div id="questionFill"></div></div><div id="energyMini" class="energyMini">⚡ 0 EP</div></div>
+<div class="companion"><div id="miniVolt"></div><div id="voltLine" class="companionText"><strong>Volt:</strong> Verfolge den Stromweg sorgfältig.</div></div>
+<div class="card"><div id="qtag" class="tag"></div><div id="question" class="question"></div><div id="visual"></div><div id="answers" class="answers"></div><div id="feedback"></div><div class="actions"><button id="check" class="primary" disabled>Antwort prüfen</button><button id="next" class="primary hidden">Weiter →</button></div></div></section>
+<section id="result" class="hidden"><div class="card result">
+<div class="resultHero"><div id="resultVolt"></div><div><div class="pill">Quiz abgeschlossen</div><div id="score" class="score"></div><h2 id="resultTitle"></h2><p id="resultText"></p></div></div>
+<div class="resultStats"><div class="statBox"><span class="small">Energie erhalten</span><strong id="resultEnergy">+0 EP</strong></div><div class="statBox"><span class="small">Trefferquote</span><strong id="resultPct">0 %</strong></div><div class="statBox"><span class="small">Bestwert</span><strong id="resultBest">0/0</strong></div></div>
+<div id="competencies" class="competencies"></div>
+<div class="resultActions"><button class="secondary" onclick="goHome()">Zur Übersicht</button><button id="errorsOnly" class="secondary errorBtn hidden">Meine Fehler üben</button><button id="retry" class="primary">Noch einmal</button></div></div></section>
+</main>
+
+<div id="storyOverlay" class="storyOverlay hidden" role="dialog" aria-modal="true" aria-label="Volts Geschichte">
+ <div class="storyPanel">
+  <div id="storyVisual" class="storyVisual"></div>
+  <div class="storyControls">
+   <button id="storySkip" class="storyLink storySkip">Überspringen</button>
+   <div id="storyDots" class="storyDots"></div>
+   <button id="storyNext" class="primary storyNext">Weiter →</button>
+  </div>
+ </div>
+</div>
+
+<script>
+// Einheitliche Grafikbasis: normnahe Schaltzeichen mit klar definierten Anschlussstellen.
+const wireColor='#111827';
+const svgStyle=`stroke="${wireColor}" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"`;
+
+const bulb=`<svg viewBox="0 0 160 90" width="160" role="img" aria-label="Schaltzeichen Glühlampe">
+  <line x1="8" y1="45" x2="50" y2="45" ${svgStyle}/>
+  <circle cx="80" cy="45" r="30" ${svgStyle}/>
+  <line x1="59" y1="24" x2="101" y2="66" ${svgStyle}/>
+  <line x1="101" y1="24" x2="59" y2="66" ${svgStyle}/>
+  <line x1="110" y1="45" x2="152" y2="45" ${svgStyle}/>
+</svg>`;
+
+const cell=`<svg viewBox="0 0 160 100" width="160" role="img" aria-label="Schaltzeichen elektrische Zelle">
+  <line x1="8" y1="50" x2="68" y2="50" ${svgStyle}/>
+  <line x1="68" y1="32" x2="68" y2="68" ${svgStyle}/>
+  <line x1="88" y1="20" x2="88" y2="80" ${svgStyle}/>
+  <line x1="88" y1="50" x2="152" y2="50" ${svgStyle}/>
+  <text x="59" y="20" font-size="17" fill="${wireColor}" stroke="none">−</text>
+  <text x="91" y="17" font-size="17" fill="${wireColor}" stroke="none">+</text>
+</svg>`;
+const battery=cell;
+
+const swOpen=`<svg viewBox="0 0 160 90" width="160" role="img" aria-label="Schaltzeichen offener Schalter">
+  <line x1="8" y1="55" x2="55" y2="55" ${svgStyle}/>
+  <circle cx="58" cy="55" r="4.5" fill="${wireColor}" stroke="none"/>
+  <circle cx="108" cy="55" r="4.5" fill="${wireColor}" stroke="none"/>
+  <line x1="61" y1="52" x2="101" y2="27" ${svgStyle}/>
+  <line x1="111" y1="55" x2="152" y2="55" ${svgStyle}/>
+</svg>`;
+
+const swClosed=`<svg viewBox="0 0 160 90" width="160" role="img" aria-label="Schaltzeichen geschlossener Schalter">
+  <line x1="8" y1="55" x2="55" y2="55" ${svgStyle}/>
+  <circle cx="58" cy="55" r="4.5" fill="${wireColor}" stroke="none"/>
+  <circle cx="108" cy="55" r="4.5" fill="${wireColor}" stroke="none"/>
+  <line x1="62" y1="55" x2="104" y2="55" ${svgStyle}/>
+  <line x1="111" y1="55" x2="152" y2="55" ${svgStyle}/>
+</svg>`;
+
+const motor=`<svg viewBox="0 0 160 90" width="160" role="img" aria-label="Schaltzeichen Elektromotor">
+  <line x1="8" y1="45" x2="50" y2="45" ${svgStyle}/>
+  <circle cx="80" cy="45" r="30" ${svgStyle}/>
+  <text x="68" y="55" font-size="28" font-family="system-ui,sans-serif" fill="${wireColor}" stroke="none">M</text>
+  <line x1="110" y1="45" x2="152" y2="45" ${svgStyle}/>
+</svg>`;
+
+function circuit(open=false){
+  // Ein einziger Serienkreis. Jedes Bauteil ersetzt ein Leitungsstück; keine Leitung läuft durch ein Symbol hindurch.
+  const switchBlade=open
+    ? `<line x1="332" y1="55" x2="372" y2="31" ${svgStyle}/>`
+    : `<line x1="332" y1="55" x2="376" y2="55" ${svgStyle}/>`;
+  return `<div class="visual"><svg viewBox="0 0 560 270" role="img" aria-label="${open?'Offener':'Geschlossener'} einfacher Stromkreis">
+    <!-- obere Leitung mit Zelle -->
+    <path d="M90 55 H220" ${svgStyle}/>
+    <line x1="220" y1="38" x2="220" y2="72" ${svgStyle}/>
+    <line x1="244" y1="25" x2="244" y2="85" ${svgStyle}/>
+    <path d="M244 55 H325" ${svgStyle}/>
+    <!-- Schalter -->
+    <circle cx="328" cy="55" r="5" fill="${wireColor}" stroke="none"/>
+    <circle cx="382" cy="55" r="5" fill="${wireColor}" stroke="none"/>
+    ${switchBlade}
+    <path d="M385 55 H470 V205 H315" ${svgStyle}/>
+    <!-- Lampe im unteren Zweig; Leitungen enden am Kreis -->
+    <line x1="315" y1="205" x2="310" y2="205" ${svgStyle}/>
+    <circle cx="280" cy="205" r="30" ${svgStyle}/>
+    <line x1="259" y1="184" x2="301" y2="226" ${svgStyle}/>
+    <line x1="301" y1="184" x2="259" y2="226" ${svgStyle}/>
+    <path d="M250 205 H90 V55" ${svgStyle}/>
+    <!-- Beschriftung -->
+    <text x="207" y="112" font-size="17" fill="${wireColor}" stroke="none">Quelle</text>
+    <text x="340" y="28" font-size="17" fill="${wireColor}" stroke="none">S</text>
+    <text x="270" y="258" font-size="17" fill="${wireColor}" stroke="none">L1</text>
+    <text x="207" y="18" font-size="16" fill="${wireColor}" stroke="none">−</text>
+    <text x="248" y="18" font-size="16" fill="${wireColor}" stroke="none">+</text>
+  </svg></div>`;
+}
+
+function contactVisual(){return `<div class="visual"><svg viewBox="0 0 560 280" role="img" aria-label="Zwei elektrische Kontakte einer Schraubglühlampe">
+  <!-- schematische gegenständliche Darstellung, ausdrücklich kein Schaltzeichen -->
+  <path d="M235 55 Q280 8 325 55 L316 112 L244 112 Z" fill="#fff" stroke="${wireColor}" stroke-width="4"/>
+  <path d="M257 62 Q280 43 303 62" ${svgStyle}/>
+  <path d="M266 62 L294 88 M294 62 L266 88" ${svgStyle}/>
+  <rect x="250" y="112" width="60" height="76" rx="5" fill="#f3f4f6" stroke="${wireColor}" stroke-width="4"/>
+  <path d="M250 126 H310 M250 141 H310 M250 156 H310 M250 171 H310" stroke="#667085" stroke-width="3" fill="none"/>
+  <rect x="262" y="188" width="36" height="12" rx="3" fill="#fff" stroke="${wireColor}" stroke-width="4"/>
+  <circle cx="280" cy="207" r="8" fill="#fff" stroke="${wireColor}" stroke-width="4"/>
+  <line x1="310" y1="150" x2="408" y2="150" ${svgStyle}/>
+  <text x="418" y="156" font-size="17" fill="${wireColor}" stroke="none">Seitenkontakt</text>
+  <line x1="280" y1="215" x2="280" y2="245" ${svgStyle}/>
+  <text x="235" y="269" font-size="17" fill="${wireColor}" stroke="none">Fußkontakt</text>
+</svg></div>`}
+
+
+function interactiveCircuit(kind='single', s1=false, s2=false){
+  const lampOn = kind==='single' ? s1 : (kind==='and' ? (s1&&s2) : (s1||s2));
+  const blade=(x,y,on,id)=>`
+    <g class="simSwitch" onclick="toggleSim('${id}')" role="button" aria-label="Schalter ${id} ${on?'geschlossen':'offen'}">
+      <circle cx="${x}" cy="${y}" r="5" fill="${wireColor}"/>
+      <circle cx="${x+52}" cy="${y}" r="5" fill="${wireColor}"/>
+      <line x1="${x+5}" y1="${y}" x2="${x+47}" y2="${on?y:y-27}" ${svgStyle}/>
+    </g>`;
+  const lamp=(cx,cy,on)=>`
+    <g class="${on?'lampGlow':''}">
+      <circle cx="${cx}" cy="${cy}" r="28" stroke="${wireColor}" stroke-width="4" fill="${on?'#fff3a6':'#fff'}"/>
+      <line x1="${cx-19}" y1="${cy-19}" x2="${cx+19}" y2="${cy+19}" ${svgStyle}/>
+      <line x1="${cx+19}" y1="${cy-19}" x2="${cx-19}" y2="${cy+19}" ${svgStyle}/>
+    </g>`;
+  if(kind==='single'){
+    return `<div class="visual"><svg viewBox="0 0 600 280" aria-label="Ein-Aus-Schaltung">
+      <path d="M90 55 H205 M225 55 H310" ${svgStyle}/>
+      <line x1="205" y1="38" x2="205" y2="72" ${svgStyle}/><line x1="225" y1="25" x2="225" y2="85" ${svgStyle}/>
+      ${blade(310,55,s1,'s1')}
+      <path d="M367 55 H510 V140 M510 196 V230 H90 V55" ${svgStyle}/>
+      ${lamp(510,168,lampOn)}
+      <text x="325" y="105" font-size="18" fill="${wireColor}">S1</text>
+      <text x="462" y="170" font-size="17" fill="${wireColor}">L1</text>
+    </svg><div class="switchHint">Schalter anklicken: S1 ist <strong>${s1?'geschlossen':'offen'}</strong>. Lampe: <strong>${lampOn?'AN':'AUS'}</strong>.</div></div>`;
+  }
+  if(kind==='and'){
+    return `<div class="visual"><svg viewBox="0 0 680 280" aria-label="UND-Schaltung mit zwei Schaltern in Reihe">
+      <path d="M70 55 H160 M180 55 H245" ${svgStyle}/>
+      <line x1="160" y1="38" x2="160" y2="72" ${svgStyle}/><line x1="180" y1="25" x2="180" y2="85" ${svgStyle}/>
+      ${blade(245,55,s1,'s1')}<path d="M302 55 H375" ${svgStyle}/>${blade(375,55,s2,'s2')}
+      <path d="M432 55 H590 V140 M590 196 V230 H70 V55" ${svgStyle}/>
+      ${lamp(590,168,lampOn)}
+      <text x="258" y="105" font-size="18">S1</text><text x="388" y="105" font-size="18">S2</text>
+    </svg><div class="switchHint">S1: <strong>${s1?'zu':'offen'}</strong> · S2: <strong>${s2?'zu':'offen'}</strong> · Lampe: <strong>${lampOn?'AN':'AUS'}</strong></div></div>`;
+  }
+  return `<div class="visual"><svg viewBox="0 0 680 330" aria-label="ODER-Schaltung mit zwei parallelen Schaltern">
+    <path d="M70 75 H160 M180 75 H250 V55 H310" ${svgStyle}/>
+    <line x1="160" y1="58" x2="160" y2="92" ${svgStyle}/><line x1="180" y1="45" x2="180" y2="105" ${svgStyle}/>
+    <path d="M250 55 V185 M250 185 H310 M367 55 H450 M367 185 H450 M450 55 V185 M450 120 H590 V155 M590 211 V260 H70 V75" ${svgStyle}/>
+    ${blade(310,55,s1,'s1')}${blade(310,185,s2,'s2')}${lamp(590,183,lampOn)}
+    <circle cx="250" cy="120" r="5" fill="${wireColor}"/><circle cx="450" cy="120" r="5" fill="${wireColor}"/>
+    <text x="323" y="38" font-size="18">S1</text><text x="323" y="225" font-size="18">S2</text>
+  </svg><div class="switchHint">S1: <strong>${s1?'zu':'offen'}</strong> · S2: <strong>${s2?'zu':'offen'}</strong> · Lampe: <strong>${lampOn?'AN':'AUS'}</strong></div></div>`;
+}
+function truthTable(kind){
+  const rows=[[0,0],[0,1],[1,0],[1,1]];
+  return `<div class="visual"><table class="truth"><tr><th>S1</th><th>S2</th><th>Lampe</th></tr>${rows.map(r=>{
+    const on=kind==='and'?(r[0]&&r[1]):(r[0]||r[1]);
+    return `<tr><td>${r[0]?'zu':'offen'}</td><td>${r[1]?'zu':'offen'}</td><td>${on?'AN':'AUS'}</td></tr>`;
+  }).join('')}</table></div>`;
+}
+
+function truthTableChoice(correctKind){
+  const rows=[[0,0],[0,1],[1,0],[1,1]];
+  const make=(kind,label)=>`<div style="min-width:210px"><strong style="display:block;text-align:center;margin-bottom:6px">Tabelle ${label}</strong><table class="truth"><tr><th>S1</th><th>S2</th><th>Lampe</th></tr>${rows.map(r=>{
+    const on=kind==='and'?(r[0]&&r[1]):(r[0]||r[1]);
+    return `<tr><td>${r[0]?'zu':'offen'}</td><td>${r[1]?'zu':'offen'}</td><td>${on?'AN':'AUS'}</td></tr>`;
+  }).join('')}</table></div>`;
+  // Correct table first for UND, second for ODER to avoid a fixed answer position.
+  const kinds = correctKind==='and' ? [['and','A'],['or','B']] : [['and','A'],['or','B']];
+  return `<div class="visual"><div style="display:flex;gap:24px;justify-content:center;align-items:flex-start;flex-wrap:wrap">${kinds.map(x=>make(x[0],x[1])).join('')}</div></div>`;
+}
+
+
+function lampCircuit(kind='series', l1=true, l2=true, unusual=false){
+  const lamp=(cx,cy,present,id,on)=>`<g class="simLamp ${present?'':'removedLamp'}" onclick="toggleLamp('${id}')" role="button" aria-label="Lampe ${id} ${present?'eingesetzt':'herausgedreht'}">
+    <circle cx="${cx}" cy="${cy}" r="28" stroke="${wireColor}" stroke-width="4" fill="${on?'#fff3a6':'#fff'}"/>
+    <line x1="${cx-19}" y1="${cy-19}" x2="${cx+19}" y2="${cy+19}" ${svgStyle}/>
+    <line x1="${cx+19}" y1="${cy-19}" x2="${cx-19}" y2="${cy+19}" ${svgStyle}/>
+    ${present?'':`<line x1="${cx-35}" y1="${cy+35}" x2="${cx+35}" y2="${cy-35}" stroke="#b3261e" stroke-width="5"/>`}
+  </g>`;
+
+  if(kind==='series'){
+    const on=l1&&l2;
+    return `<div class="visual"><svg viewBox="0 0 700 320" aria-label="Reihenschaltung zweier Lampen">
+      <!-- source in left vertical branch -->
+      <path d="M105 65 H300" ${svgStyle}/>
+      <line x1="300" y1="65" x2="332" y2="65" ${svgStyle}/>
+      ${lamp(360,65,l1,'l1',on)}
+      <line x1="388" y1="65" x2="482" y2="65" ${svgStyle}/>
+      ${lamp(510,65,l2,'l2',on)}
+      <path d="M538 65 H610 V255 H105" ${svgStyle}/>
+      <path d="M105 255 V177 M105 143 V65" ${svgStyle}/>
+      <line x1="88" y1="177" x2="122" y2="177" ${svgStyle}/>
+      <line x1="75" y1="143" x2="135" y2="143" ${svgStyle}/>
+      <text x="348" y="118" font-size="18" fill="${wireColor}">L1</text>
+      <text x="498" y="118" font-size="18" fill="${wireColor}">L2</text>
+      <text x="46" y="165" font-size="17" fill="${wireColor}">Quelle</text>
+    </svg><div class="switchHint">L1: <strong>${l1?'eingesetzt':'herausgedreht'}</strong> · L2: <strong>${l2?'eingesetzt':'herausgedreht'}</strong> · leuchtende Lampen: <strong>${on?'L1 und L2':'keine'}</strong></div></div>`;
+  }
+
+  const on1=l1, on2=l2;
+  if(!unusual){
+    return `<div class="visual"><svg viewBox="0 0 700 360" aria-label="Parallelschaltung zweier Lampen">
+      <!-- outer loop and source -->
+      <path d="M105 60 H585 V300 H105" ${svgStyle}/>
+      <path d="M105 300 V202 M105 168 V60" ${svgStyle}/>
+      <line x1="88" y1="202" x2="122" y2="202" ${svgStyle}/>
+      <line x1="75" y1="168" x2="135" y2="168" ${svgStyle}/>
+      <!-- left/right bus bars and two branches; lines stop exactly at lamp circles -->
+      <path d="M245 60 V300 M535 60 V300" ${svgStyle}/>
+      <path d="M245 125 H332 M388 125 H535" ${svgStyle}/>
+      <path d="M245 235 H332 M388 235 H535" ${svgStyle}/>
+      <circle cx="245" cy="125" r="5" fill="${wireColor}"/>
+      <circle cx="535" cy="125" r="5" fill="${wireColor}"/>
+      <circle cx="245" cy="235" r="5" fill="${wireColor}"/>
+      <circle cx="535" cy="235" r="5" fill="${wireColor}"/>
+      ${lamp(360,125,l1,'l1',on1)}
+      ${lamp(360,235,l2,'l2',on2)}
+      <text x="405" y="132" font-size="18" fill="${wireColor}">L1</text>
+      <text x="405" y="242" font-size="18" fill="${wireColor}">L2</text>
+      <text x="46" y="190" font-size="17" fill="${wireColor}">Quelle</text>
+    </svg><div class="switchHint">L1: <strong>${l1?'eingesetzt':'herausgedreht'}</strong> · L2: <strong>${l2?'eingesetzt':'herausgedreht'}</strong> · leuchtend: <strong>${[l1?'L1':'',l2?'L2':''].filter(Boolean).join(' und ')||'keine'}</strong></div></div>`;
+  }
+
+  /* Asymmetrisch gezeichnet, aber elektrisch eindeutig parallel:
+     exakt zwei gemeinsame Knoten und zwei getrennte Lampenzweige. */
+  return `<div class="visual"><svg viewBox="0 0 700 390" aria-label="Asymmetrisch gezeichnete Parallelschaltung zweier Lampen">
+    <!-- Quelle und gemeinsame Zuleitung -->
+    <path d="M95 330 V218 M95 184 V60 H220" ${svgStyle}/>
+    <line x1="78" y1="218" x2="112" y2="218" ${svgStyle}/>
+    <line x1="65" y1="184" x2="125" y2="184" ${svgStyle}/>
+    <text x="30" y="207" font-size="17" fill="${wireColor}">Quelle</text>
+
+    <!-- linker und rechter gemeinsamer Knoten -->
+    <circle cx="220" cy="60" r="6" fill="${wireColor}"/>
+    <circle cx="560" cy="60" r="6" fill="${wireColor}"/>
+
+    <!-- oberer Zweig mit L1 -->
+    <path d="M220 60 H327" ${svgStyle}/>
+    ${lamp(355,60,l1,'l1',on1)}
+    <path d="M383 60 H560" ${svgStyle}/>
+
+    <!-- unterer Zweig: bewusst tiefer und asymmetrisch geführt -->
+    <path d="M220 60 V245 H407" ${svgStyle}/>
+    ${lamp(435,245,l2,'l2',on2)}
+    <path d="M463 245 H560 V60" ${svgStyle}/>
+
+    <!-- Rückleitung zur Quelle -->
+    <path d="M560 60 H620 V330 H95" ${svgStyle}/>
+
+    <text x="342" y="112" font-size="18" fill="${wireColor}">L1</text>
+    <text x="422" y="297" font-size="18" fill="${wireColor}">L2</text>
+  </svg></div>`;
+}
+function staticLampCircuit(kind='series', unusual=false){
+  return lampCircuit(kind,true,true,unusual)
+    .replaceAll('onclick="toggleLamp(\'l1\')"','')
+    .replaceAll('onclick="toggleLamp(\'l2\')"','')
+    .replaceAll('class="simLamp ','class="');
+}
+
+
+function analysisCircuit(kind='branch', s1=false, s2=false){
+  const blade=(x,y,on,id)=>`<g class="simSwitch" onclick="toggleAnalysis('${id}')" role="button" aria-label="Schalter ${id} ${on?'geschlossen':'offen'}">
+    <circle cx="${x}" cy="${y}" r="5" fill="${wireColor}"/>
+    <circle cx="${x+52}" cy="${y}" r="5" fill="${wireColor}"/>
+    <line x1="${x+5}" y1="${y}" x2="${x+47}" y2="${on?y:y-25}" ${svgStyle}/>
+  </g>`;
+  const lamp=(cx,cy,id,on)=>`<g class="${on?'lampGlow':''}">
+    <circle cx="${cx}" cy="${cy}" r="28" stroke="${wireColor}" stroke-width="4" fill="${on?'#fff3a6':'#fff'}"/>
+    <line x1="${cx-19}" y1="${cy-19}" x2="${cx+19}" y2="${cy+19}" ${svgStyle}/>
+    <line x1="${cx+19}" y1="${cy-19}" x2="${cx-19}" y2="${cy+19}" ${svgStyle}/>
+    <text x="${cx-11}" y="${cy+52}" font-size="17" fill="${wireColor}">${id}</text>
+  </g>`;
+  const source=`<path d="M90 315 V207 M90 173 V55" ${svgStyle}/>
+    <line x1="73" y1="207" x2="107" y2="207" ${svgStyle}/>
+    <line x1="60" y1="173" x2="120" y2="173" ${svgStyle}/>
+    <text x="25" y="196" font-size="16" fill="${wireColor}">Quelle</text>`;
+
+  if(kind==='branch'){
+    // L1 is in series with a parallel section: branch A = S1+L2, branch B = S2+L3.
+    const l2=s1, l3=s2, l1=s1||s2;
+    return `<div class="visual"><svg viewBox="0 0 760 390" aria-label="L1 in Reihe mit zwei geschalteten Parallelzweigen">
+      ${source}
+      <path d="M90 55 H200" ${svgStyle}/>
+      ${lamp(228,55,'L1',l1)}
+      <path d="M256 55 H315 V315 H90" ${svgStyle}/>
+      <path d="M315 110 H360" ${svgStyle}/>${blade(360,110,s1,'s1')}
+      <path d="M417 110 H470" ${svgStyle}/>${lamp(498,110,'L2',l2)}<path d="M526 110 H625" ${svgStyle}/>
+      <path d="M315 245 H360" ${svgStyle}/>${blade(360,245,s2,'s2')}
+      <path d="M417 245 H470" ${svgStyle}/>${lamp(498,245,'L3',l3)}<path d="M526 245 H625" ${svgStyle}/>
+      <path d="M625 110 V315 H315" ${svgStyle}/>
+      <circle cx="315" cy="177" r="5" fill="${wireColor}"/><circle cx="625" cy="177" r="5" fill="${wireColor}"/>
+      <text x="374" y="88" font-size="17">S1</text><text x="374" y="223" font-size="17">S2</text>
+    </svg><div class="switchHint">S1: <strong>${s1?'zu':'offen'}</strong> · S2: <strong>${s2?'zu':'offen'}</strong> · leuchtend: <strong>${[l1?'L1':'',l2?'L2':'',l3?'L3':''].filter(Boolean).join(', ')||'keine'}</strong></div></div>`;
+  }
+
+  if(kind==='master'){
+    // S1 is master switch; after it L1 and L2 are parallel, S2 controls only L2.
+    const l1=s1, l2=s1&&s2;
+    return `<div class="visual"><svg viewBox="0 0 760 390" aria-label="Hauptschalter S1 und Zweigschalter S2">
+      ${source}
+      <path d="M90 55 H180" ${svgStyle}/>${blade(180,55,s1,'s1')}<path d="M237 55 H315 V315 H90" ${svgStyle}/>
+      <path d="M315 115 H440" ${svgStyle}/>${lamp(468,115,'L1',l1)}<path d="M496 115 H625" ${svgStyle}/>
+      <path d="M315 245 H365" ${svgStyle}/>${blade(365,245,s2,'s2')}<path d="M422 245 H440" ${svgStyle}/>${lamp(468,245,'L2',l2)}<path d="M496 245 H625" ${svgStyle}/>
+      <path d="M625 115 V315 H315" ${svgStyle}/>
+      <circle cx="315" cy="180" r="5" fill="${wireColor}"/><circle cx="625" cy="180" r="5" fill="${wireColor}"/>
+      <text x="194" y="103" font-size="17">S1</text><text x="379" y="223" font-size="17">S2</text>
+    </svg><div class="switchHint">S1: <strong>${s1?'zu':'offen'}</strong> · S2: <strong>${s2?'zu':'offen'}</strong> · leuchtend: <strong>${[l1?'L1':'',l2?'L2':''].filter(Boolean).join(', ')||'keine'}</strong></div></div>`;
+  }
+
+  // S2 is a bypass around L2. S1 is the main switch. L1 always remains in series.
+  const closed=s1, l1=closed, l2=closed&&!s2;
+  return `<div class="visual"><svg viewBox="0 0 760 390" aria-label="Schaltung mit Überbrückung von L2">
+    ${source}
+    <path d="M90 55 H165" ${svgStyle}/>${blade(165,55,s1,'s1')}<path d="M222 55 H285" ${svgStyle}/>
+    ${lamp(313,55,'L1',l1)}
+    <path d="M341 55 H415" ${svgStyle}/>
+    ${lamp(443,55,'L2',l2)}
+    <path d="M471 55 H625 V315 H90" ${svgStyle}/>
+    <!-- bypass branch begins and ends at the two nodes surrounding L2 -->
+    <path d="M385 55 V180 H405" ${svgStyle}/>${blade(405,180,s2,'s2')}<path d="M462 180 H500 V55" ${svgStyle}/>
+    <circle cx="385" cy="55" r="5" fill="${wireColor}"/><circle cx="500" cy="55" r="5" fill="${wireColor}"/>
+    <text x="179" y="103" font-size="17">S1</text><text x="419" y="228" font-size="17">S2</text>
+  </svg><div class="switchHint">S1: <strong>${s1?'zu':'offen'}</strong> · S2 (Überbrückung): <strong>${s2?'zu':'offen'}</strong> · leuchtend: <strong>${[l1?'L1':'',l2?'L2':''].filter(Boolean).join(', ')||'keine'}</strong></div></div>`;
+}
+function staticAnalysisCircuit(kind,s1=false,s2=false){
+  return analysisCircuit(kind,s1,s2)
+    .replaceAll(/onclick="toggleAnalysis\('[^']+'\)"/g,'')
+    .replaceAll('class="simSwitch"','class=""');
+}
+
+
+function proCircuit(kind='doubleSeries', s1=false, s2=false){
+  const blade=(x,y,on,id)=>`<g class="simSwitch" onclick="togglePro('${id}')" role="button" aria-label="Schalter ${id} ${on?'geschlossen':'offen'}">
+    <circle cx="${x}" cy="${y}" r="5" fill="${wireColor}"/>
+    <circle cx="${x+52}" cy="${y}" r="5" fill="${wireColor}"/>
+    <line x1="${x+5}" y1="${y}" x2="${x+47}" y2="${on?y:y-25}" ${svgStyle}/>
+  </g>`;
+  const lamp=(cx,cy,id,on)=>`<g class="${on?'lampGlow':''}">
+    <circle cx="${cx}" cy="${cy}" r="28" stroke="${wireColor}" stroke-width="4" fill="${on?'#fff3a6':'#fff'}"/>
+    <line x1="${cx-19}" y1="${cy-19}" x2="${cx+19}" y2="${cy+19}" ${svgStyle}/>
+    <line x1="${cx+19}" y1="${cy-19}" x2="${cx-19}" y2="${cy+19}" ${svgStyle}/>
+    <text x="${cx-11}" y="${cy+52}" font-size="17" fill="${wireColor}">${id}</text>
+  </g>`;
+  const source=`<path d="M85 330 V217 M85 183 V55" ${svgStyle}/>
+    <line x1="68" y1="217" x2="102" y2="217" ${svgStyle}/>
+    <line x1="55" y1="183" x2="115" y2="183" ${svgStyle}/>
+    <text x="18" y="205" font-size="16" fill="${wireColor}">Quelle</text>`;
+
+  if(kind==='doubleSeries'){
+    // Two parallel branches. Each branch has switch + two lamps in series.
+    const a=s1,b=s2;
+    return `<div class="visual"><svg viewBox="0 0 820 410" aria-label="Zwei parallele Zweige mit je zwei Lampen">
+      ${source}<path d="M85 55 H250 V330 H85" ${svgStyle}/>
+      <path d="M250 110 H300" ${svgStyle}/>${blade(300,110,s1,'s1')}<path d="M357 110 H400" ${svgStyle}/>
+      ${lamp(428,110,'L1',a)}<path d="M456 110 H505" ${svgStyle}/>${lamp(533,110,'L2',a)}<path d="M561 110 H675" ${svgStyle}/>
+      <path d="M250 260 H300" ${svgStyle}/>${blade(300,260,s2,'s2')}<path d="M357 260 H400" ${svgStyle}/>
+      ${lamp(428,260,'L3',b)}<path d="M456 260 H505" ${svgStyle}/>${lamp(533,260,'L4',b)}<path d="M561 260 H675" ${svgStyle}/>
+      <path d="M675 110 V330 H250" ${svgStyle}/>
+      <circle cx="250" cy="185" r="5" fill="${wireColor}"/><circle cx="675" cy="185" r="5" fill="${wireColor}"/>
+      <text x="314" y="88" font-size="17">S1</text><text x="314" y="238" font-size="17">S2</text>
+    </svg><div class="switchHint">S1: <strong>${s1?'zu':'offen'}</strong> · S2: <strong>${s2?'zu':'offen'}</strong> · leuchtend: <strong>${[a?'L1, L2':'',b?'L3, L4':''].filter(Boolean).join(' und ')||'keine'}</strong></div></div>`;
+  }
+
+  if(kind==='crossControl'){
+    // L1 is unconditionally connected once S1 master is closed; S2 adds L2 and L3 in series in a second branch.
+    const l1=s1, l2=s1&&s2, l3=l2;
+    return `<div class="visual"><svg viewBox="0 0 820 410" aria-label="Hauptschalter und zwei unterschiedliche Parallelzweige">
+      ${source}<path d="M85 55 H165" ${svgStyle}/>${blade(165,55,s1,'s1')}<path d="M222 55 H270 V330 H85" ${svgStyle}/>
+      <path d="M270 115 H400" ${svgStyle}/>${lamp(428,115,'L1',l1)}<path d="M456 115 H680" ${svgStyle}/>
+      <path d="M270 260 H315" ${svgStyle}/>${blade(315,260,s2,'s2')}<path d="M372 260 H400" ${svgStyle}/>
+      ${lamp(428,260,'L2',l2)}<path d="M456 260 H515" ${svgStyle}/>${lamp(543,260,'L3',l3)}<path d="M571 260 H680" ${svgStyle}/>
+      <path d="M680 115 V330 H270" ${svgStyle}/>
+      <circle cx="270" cy="187" r="5" fill="${wireColor}"/><circle cx="680" cy="187" r="5" fill="${wireColor}"/>
+      <text x="179" y="103" font-size="17">S1</text><text x="329" y="238" font-size="17">S2</text>
+    </svg><div class="switchHint">S1: <strong>${s1?'zu':'offen'}</strong> · S2: <strong>${s2?'zu':'offen'}</strong> · leuchtend: <strong>${[l1?'L1':'',l2?'L2':'',l3?'L3':''].filter(Boolean).join(', ')||'keine'}</strong></div></div>`;
+  }
+
+  // Two switches in parallel as alternative paths, followed by two lamps in series.
+  const closed=s1||s2;
+  return `<div class="visual"><svg viewBox="0 0 820 410" aria-label="Parallele Schalter vor zwei Lampen in Reihe">
+    ${source}<path d="M85 55 H245 V330 H85" ${svgStyle}/>
+    <path d="M245 105 H300" ${svgStyle}/>${blade(300,105,s1,'s1')}<path d="M357 105 H430" ${svgStyle}/>
+    <path d="M245 220 H300" ${svgStyle}/>${blade(300,220,s2,'s2')}<path d="M357 220 H430" ${svgStyle}/>
+    <path d="M430 105 V220 M430 162 H490" ${svgStyle}/>
+    ${lamp(518,162,'L1',closed)}<path d="M546 162 H595" ${svgStyle}/>${lamp(623,162,'L2',closed)}
+    <path d="M651 162 H705 V330 H245" ${svgStyle}/>
+    <circle cx="245" cy="162" r="5" fill="${wireColor}"/><circle cx="430" cy="162" r="5" fill="${wireColor}"/>
+    <text x="314" y="83" font-size="17">S1</text><text x="314" y="198" font-size="17">S2</text>
+  </svg><div class="switchHint">S1: <strong>${s1?'zu':'offen'}</strong> · S2: <strong>${s2?'zu':'offen'}</strong> · leuchtend: <strong>${closed?'L1, L2':'keine'}</strong></div></div>`;
+}
+function staticProCircuit(kind,s1=false,s2=false){
+  return proCircuit(kind,s1,s2).replaceAll(/onclick="togglePro\('[^']+'\)"/g,'').replaceAll('class="simSwitch"','class=""');
+}
+
+
+function voltSVG(mood='ready',size=220){
+  const eyeY=mood==='celebrate'?80:78;
+  const mouth=mood==='celebrate'
+    ? `<path d="M91 111 Q110 128 129 111" stroke="#152033" stroke-width="5" fill="none" stroke-linecap="round"/>`
+    : mood==='think'
+    ? `<path d="M96 116 Q110 108 124 116" stroke="#152033" stroke-width="5" fill="none" stroke-linecap="round"/>`
+    : `<path d="M96 112 Q110 120 124 112" stroke="#152033" stroke-width="5" fill="none" stroke-linecap="round"/>`;
+  const sparks=mood==='celebrate'?`<path d="M38 42 l-12 -12 M180 42 l13 -13 M110 20 V2" stroke="#e4a400" stroke-width="5" stroke-linecap="round"/>`:'';
+  return `<svg viewBox="0 0 220 240" width="${size}" role="img" aria-label="Volt, der Lernroboter">
+    ${sparks}<rect x="54" y="48" width="112" height="104" rx="28" fill="#eef2ff" stroke="#3157d5" stroke-width="5"/>
+    <path d="M110 48 V29" stroke="#3157d5" stroke-width="5"/><circle cx="110" cy="24" r="8" fill="#f5c542" stroke="#3157d5" stroke-width="4"/>
+    <circle cx="83" cy="${eyeY}" r="8" fill="#152033"/><circle cx="137" cy="${eyeY}" r="8" fill="#152033"/>${mouth}
+    <rect x="69" y="151" width="82" height="67" rx="19" fill="#fff" stroke="#3157d5" stroke-width="5"/>
+    <circle cx="110" cy="181" r="21" fill="#fff3a6" stroke="#152033" stroke-width="4"/>
+    <path d="M97 168 L123 194 M123 168 L97 194" stroke="#152033" stroke-width="4"/>
+    <path d="M69 169 L43 190 M151 169 L177 190 M87 218 L76 235 M133 218 L144 235" stroke="#3157d5" stroke-width="6" stroke-linecap="round"/>
+  </svg>`;
+}
+function quizIcon(id){
+ const common=`stroke="${wireColor}" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"`;
+ const lamp=(x,y)=>`<circle cx="${x}" cy="${y}" r="15" ${common}/><path d="M${x-10} ${y-10} L${x+10} ${y+10} M${x+10} ${y-10} L${x-10} ${y+10}" ${common}/>`;
+ const sw=(x,y)=>`<circle cx="${x}" cy="${y}" r="3.5" fill="${wireColor}"/><circle cx="${x+28}" cy="${y}" r="3.5" fill="${wireColor}"/><path d="M${x+3} ${y-1} L${x+24} ${y-14}" ${common}/>`;
+ const body={1:`${lamp(75,40)}<path d="M15 40 H60 M90 40 H135" ${common}/>`,
+ 2:`<path d="M18 15 H115 V65 H18 V15" ${common}/>${lamp(67,65)}`,
+ 3:`${lamp(42,40)}${sw(82,40)}`,
+ 4:`${sw(24,40)}${lamp(100,40)}<path d="M55 40 H85" ${common}/>`,
+ 5:`<path d="M18 18 H38 M66 18 H125 M18 62 H38 M66 62 H125 M18 18 V62 M125 18 V62" ${common}/>${sw(38,18)}${sw(38,62)}`,
+ 6:`<path d="M18 18 H55 M85 18 H125 M18 62 H55 M85 62 H125 M18 18 V62 M125 18 V62" ${common}/>${lamp(70,18)}${lamp(70,62)}`,
+ 7:`<path d="M15 40 H40 M68 40 H90 V15 H115 M90 40 V65 H115" ${common}/>${sw(40,40)}${lamp(130,15)}${lamp(130,65)}`,
+ 8:`<path d="M12 40 H32 M60 40 H82 M110 40 H145" ${common}/>${sw(32,40)}${lamp(95,40)}<path d="M82 20 H110" ${common}/>`}[id];
+ return `<svg viewBox="0 0 150 80" aria-hidden="true">${body}</svg>`;
+}
+function normalizeProgress(){
+  Object.keys(progressData).forEach(k=>{
+    const p=progressData[k];
+    if(p && p.best!=null && p.completed==null) p.completed=true;
+    if(p && p.attempts==null) p.attempts=p.completed?1:0;
+  });
+}
+function totalEnergy(){return Object.values(progressData).reduce((s,p)=>s+(p?.best||0)*10,0)}
+function starsFor(best,total){if(!total||!best)return '☆☆☆';const r=best/total;return r>=.9?'★★★':r>=.7?'★★☆':'★☆☆'}
+
+
+const STORY_KEY='stromquiz_story_v10';
+let storyState=JSON.parse(localStorage.getItem(STORY_KEY)||'{}');
+let activeStory='intro',storyIndex=0,systemStarted=false;
+
+function storySave(){localStorage.setItem(STORY_KEY,JSON.stringify(storyState))}
+function labSVG(level=0,full=false){
+ const glow=level>=1?'#f5c542':'#34405c', glow2=level>=2?'#79a7ff':'#34405c', screen=level>=3?'#6ee7b7':'#26324b';
+ return `<svg viewBox="0 0 440 280" role="img" aria-label="Volts Werkstatt">
+ <defs><linearGradient id="labwall" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#17223b"/><stop offset="1" stop-color="#26375f"/></linearGradient></defs>
+ <rect width="440" height="280" rx="22" fill="url(#labwall)"/>
+ <path d="M0 226 H440 M55 226 V255 M385 226 V255" stroke="#52617e" stroke-width="4"/>
+ <rect x="35" y="48" width="105" height="78" rx="10" fill="#111827" stroke="#52617e" stroke-width="3"/>
+ <circle cx="61" cy="73" r="9" fill="${glow}"/><circle cx="91" cy="73" r="9" fill="${glow2}"/><rect x="55" y="96" width="64" height="10" rx="5" fill="${screen}"/>
+ <path d="M140 88 H184 V47 H228" stroke="${level>=2?'#79a7ff':'#52617e'}" stroke-width="4" fill="none"/>
+ <circle cx="228" cy="47" r="13" fill="${level>=2?'#fff0a8':'#29354f'}" stroke="#9aa8c5" stroke-width="3"/>
+ <path d="M270 72 H389 V178 H344" stroke="${level>=3?'#f5c542':'#52617e'}" stroke-width="4" fill="none"/>
+ <rect x="326" y="165" width="73" height="46" rx="8" fill="#111827" stroke="#52617e" stroke-width="3"/><rect x="339" y="178" width="47" height="12" rx="4" fill="${screen}"/>
+ <g transform="translate(145,52) scale(.68)">${voltSVG(full?'celebrate':level===0?'think':'ready',220).replace(/<svg[^>]*>|<\/svg>/g,'')}</g>
+ ${level>=3?'<circle cx="228" cy="47" r="24" fill="#f5c542" opacity=".12"/><circle cx="61" cy="73" r="19" fill="#f5c542" opacity=".08"/>':''}
+ </svg>`;
+}
+function storySceneSVG(kind,i){
+ const lit=kind==='ending' && i>=2;
+ const room=`<rect width="900" height="500" fill="#10192c"/><path d="M0 390 H900" stroke="#34425f" stroke-width="5"/><path d="M110 390 V455 M790 390 V455" stroke="#34425f" stroke-width="6"/>`;
+ const panels=`<rect x="65" y="90" width="190" height="150" rx="16" fill="#17223b" stroke="#4c5c7b" stroke-width="4"/><circle cx="105" cy="130" r="13" fill="${lit?'#f5c542':'#35415b'}"/><circle cx="150" cy="130" r="13" fill="${lit?'#79a7ff':'#35415b'}"/><rect x="95" y="170" width="125" height="24" rx="8" fill="${lit?'#6ee7b7':'#26324b'}"/>`;
+ const volt=`<g transform="translate(560,135) scale(1.25)">${voltSVG((kind==='ending'&&i>=3)?'celebrate':i<2?'think':'ready',220).replace(/<svg[^>]*>|<\/svg>/g,'')}</g>`;
+ if(kind==='intro'){
+   if(i===0)return `<svg viewBox="0 0 900 500">${room}${panels}${volt}<circle cx="700" cy="365" r="80" fill="#3157d5" opacity=".05"/></svg>`;
+   if(i===1)return `<svg viewBox="0 0 900 500">${room}${panels}${volt}<g transform="translate(365 155)"><rect width="130" height="210" rx="20" fill="#17223b" stroke="#536382" stroke-width="4"/><rect x="25" y="32" width="80" height="24" rx="8" fill="#26324b"/><text x="65" y="50" text-anchor="middle" fill="#f5c542" font-size="18" font-weight="800">3 %</text><path d="M65 82 V170" stroke="#52617e" stroke-width="7"/></g></svg>`;
+   if(i===2)return `<svg viewBox="0 0 900 500">${room}${panels}<g transform="translate(260 135)">${[0,1,2,3,4,5,6,7].map((x,n)=>`<circle cx="${(n%4)*105}" cy="${Math.floor(n/4)*115}" r="34" fill="#17223b" stroke="#52617e" stroke-width="4"/><text x="${(n%4)*105}" y="${Math.floor(n/4)*115+7}" text-anchor="middle" fill="#8795b2" font-size="22" font-weight="800">${n+1}</text>`).join('')}</g>${volt}</svg>`;
+   if(i===3)return `<svg viewBox="0 0 900 500">${room}${panels}<path d="M280 280 H510 V175 H610" stroke="#52617e" stroke-width="6" fill="none"/><circle cx="395" cy="280" r="32" fill="none" stroke="#f5c542" stroke-width="5"/><path d="M373 258 L417 302 M417 258 L373 302" stroke="#f5c542" stroke-width="5"/>${volt}</svg>`;
+   return `<svg viewBox="0 0 900 500">${room}${panels}${volt}<g transform="translate(325 110)"><rect width="170" height="250" rx="28" fill="#17223b" stroke="#52617e" stroke-width="5"/><rect x="34" y="48" width="102" height="130" rx="13" fill="#10192c" stroke="#f5c542" stroke-width="4"/><rect x="43" y="145" width="84" height="24" rx="6" fill="#f5c542"/><text x="85" y="211" text-anchor="middle" fill="#fff" font-size="28" font-weight="900">90 %</text></g></svg>`;
+ }
+ if(i===0)return `<svg viewBox="0 0 900 500">${room}${panels}${volt}<g transform="translate(330 130)"><rect width="160" height="230" rx="25" fill="#17223b" stroke="#f5c542" stroke-width="5"/><circle cx="80" cy="82" r="34" fill="#f5c542" opacity=".2"/><path d="M55 82 H105" stroke="#f5c542" stroke-width="9"/><text x="80" y="178" text-anchor="middle" fill="#f5c542" font-size="26" font-weight="900">READY</text></g></svg>`;
+ if(i===1)return `<svg viewBox="0 0 900 500">${room}${panels}${volt}<g class="bigSwitch" onclick="startMainSystem()" transform="translate(330 145)"><rect width="180" height="180" rx="30" fill="#17223b" stroke="#f5c542" stroke-width="5"/><circle cx="55" cy="90" r="10" fill="#f5c542"/><circle cx="130" cy="90" r="10" fill="#f5c542"/><path d="M63 84 L120 50" stroke="#f5c542" stroke-width="10" stroke-linecap="round"/><text x="90" y="145" text-anchor="middle" fill="#fff" font-size="18" font-weight="800">ANKLICKEN</text></g></svg>`;
+ return `<svg viewBox="0 0 900 500" class="${i===2?'systemFlash':''}">${room}${panels}${volt}<path d="M255 165 H400 V80 H690" stroke="${lit?'#f5c542':'#52617e'}" stroke-width="6" fill="none"/><circle cx="400" cy="80" r="19" fill="${lit?'#fff0a8':'#29354f'}" stroke="#9aa8c5" stroke-width="4"/>${i===4?'<text x="450" y="420" text-anchor="middle" fill="#f5c542" font-size="34" font-weight="900">MISSION STROMKREIS</text><text x="450" y="457" text-anchor="middle" fill="#fff" font-size="22">ERFOLGREICH ABGESCHLOSSEN</text>':''}</svg>`;
+}
+const introScenes=[
+ {speech:'Hallo? Ist da jemand? Mein Energiespeicher ist fast leer …',caption:'In Volts Werkstatt ist fast alles ausgefallen. Nur wenige Systeme reagieren noch.'},
+ {speech:'Irgendetwas stimmt mit meinen Stromkreisen nicht. Ohne sie kann ich meinen Akku nicht vollständig laden.',caption:'Volts Akku steht bei nur 3 %. Die Energieversorgung der Werkstatt ist unterbrochen.'},
+ {speech:'Meine Energie steckt in acht Modulen. Jedes funktioniert nach anderen Regeln.',caption:'Acht Missionen führen von den Grundlagen bis zu komplexen Stromkreisen.'},
+ {speech:'Wenn du herausfindest, wie die Stromwege funktionieren, können wir die Module wieder aktivieren.',caption:'Jede erstmals gemeisterte Aufgabe liefert 10 Energiepunkte.'},
+ {speech:'Wir brauchen mindestens 90 % Energie, damit ich das Hauptsystem starten kann.',caption:'Meistere mindestens 81 der 89 Aufgaben und öffne am Ende des Lernpfads das Hauptsystem.'}
+];
+const endingScenes=[
+ {speech:'90 Prozent! Das reicht. Dann wollen wir mal sehen, ob wir alles richtig gemacht haben.',caption:'Das Hauptsystem ist bereit für den Start.'},
+ {speech:'Der Hauptschalter ist noch offen. Schließ ihn!',caption:'Klicke den großen Schalter im Bild, um das Hauptsystem zu starten.',interactive:true},
+ {speech:'Stromweg geschlossen!',caption:'Die Leitungen der Werkstatt werden wieder mit Energie versorgt.'},
+ {speech:'Es funktioniert!',caption:'Volts Akku und die Systeme der Werkstatt sind wieder aktiv.'},
+ {speech:'Du hast nicht einfach meinen Akku geladen. Du hast gelernt, Stromkreise zu lesen, zu schalten und zu verstehen.',caption:'MISSION STROMKREIS erfolgreich abgeschlossen.'}
+];
+function openStory(kind='intro'){
+ activeStory=kind;storyIndex=0;systemStarted=false;
+ document.getElementById('storyOverlay').classList.remove('hidden');renderStory();
+}
+function closeStory(mark=true){
+ document.getElementById('storyOverlay').classList.add('hidden');
+ if(mark){if(activeStory==='intro')storyState.introSeen=true;else storyState.endingSeen=true;storySave()}
+ renderHome();
+}
+function renderStory(){
+ const scenes=activeStory==='intro'?introScenes:endingScenes, s=scenes[storyIndex];
+ document.getElementById('storyVisual').innerHTML=storySceneSVG(activeStory,storyIndex)+`<div class="speech">${s.speech}</div><div class="storyCaption">${s.caption}</div>`;
+ document.getElementById('storyDots').innerHTML=scenes.map((_,i)=>`<span class="storyDot ${i===storyIndex?'active':''}"></span>`).join('');
+ const next=document.getElementById('storyNext');
+ next.textContent=storyIndex===scenes.length-1?(activeStory==='intro'?'Mission starten':'Zur Missionsübersicht'):'Weiter →';
+ next.disabled=!!s.interactive&&!systemStarted;
+ document.getElementById('storySkip').style.visibility=activeStory==='ending'?'hidden':'visible';
+}
+
+function enhanceTouchTargets(root=document){
+  root.querySelectorAll('svg .simSwitch, svg .simLamp, svg .bigSwitch').forEach(el=>{
+    if(el.dataset.touchEnhanced)return;
+    el.dataset.touchEnhanced='1';
+    try{
+      const b=el.getBBox(), ns='http://www.w3.org/2000/svg';
+      const hit=document.createElementNS(ns,'rect');
+      const pad=el.classList.contains('bigSwitch')?8:16;
+      hit.setAttribute('x',b.x-pad);hit.setAttribute('y',b.y-pad);
+      hit.setAttribute('width',b.width+pad*2);hit.setAttribute('height',b.height+pad*2);
+      hit.setAttribute('rx','10');hit.setAttribute('fill','transparent');hit.setAttribute('stroke','transparent');
+      hit.style.pointerEvents='all';hit.style.cursor='pointer';
+      hit.addEventListener('click',ev=>{ev.stopPropagation();el.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true,view:window}))});
+      el.insertBefore(hit,el.firstChild);
+    }catch(e){}
+  });
+}
+const touchObserver=new MutationObserver(()=>requestAnimationFrame(()=>enhanceTouchTargets()));
+touchObserver.observe(document.documentElement,{childList:true,subtree:true});
+window.addEventListener('load',()=>enhanceTouchTargets());
+window.addEventListener('orientationchange',()=>setTimeout(()=>window.scrollTo({top:0,behavior:'auto'}),120));
+
+function storyNext(){
+ const scenes=activeStory==='intro'?introScenes:endingScenes;
+ if(scenes[storyIndex].interactive&&!systemStarted)return;
+ if(storyIndex<scenes.length-1){storyIndex++;renderStory()}else closeStory(true)
+}
+function startMainSystem(){
+ systemStarted=true;storyIndex=2;renderStory();
+}
+document.getElementById('storyNext').onclick=storyNext;
+document.getElementById('storySkip').onclick=()=>closeStory(true);
+function workshopLevel(){
+ const p=masteredSet().size/totalQuestions();
+ return p>=.9?3:p>=.6?2:p>=.3?1:0;
+}
+function renderWorkshop(){
+ const m=masteredSet().size,t=totalQuestions(),pct=Math.round(m/t*100),lvl=workshopLevel();
+ const texts=[
+  ['Notbetrieb','Die Werkstatt ist fast dunkel. Hilf Volt, die ersten Energiemodule wieder zu aktivieren.'],
+  ['Erste Systeme aktiv','Die ersten Lampen und Anzeigen funktionieren wieder.'],
+  ['Fast geschafft','Ein Großteil der Werkstatt läuft. Jetzt fehlen vor allem die schwierigeren Stromkreise.'],
+  ['Hauptsystem bereit','Genug Energie! Das Hauptsystem am Ende des Lernpfads kann gestartet werden.']
+ ][lvl];
+ document.getElementById('workshop').style.setProperty('--labGlow',lvl>=2?'.25':'.08');
+ document.getElementById('workshop').style.setProperty('--labWarm',lvl>=1?'.18':'.04');
+ document.getElementById('workshop').innerHTML=`<div class="workshopScene"><div class="workshopCopy"><div class="missionKicker">VOLTS WERKSTATT</div><h2>${texts[0]}</h2><p>${texts[1]}</p><div class="workshopStatus"><span class="labChip">⚡ ${m*10} EP</span><span class="labChip">${m}/${t} gemeistert</span><span class="labChip">${pct}% Energie</span></div></div><div class="workshopArt">${labSVG(lvl,lvl===3)}</div></div>`;
+}
+function renderGoal(){
+ const m=masteredSet().size,t=totalQuestions(),need=Math.ceil(t*.9),ready=m>=need,left=Math.max(0,need-m);
+ document.getElementById('goalStation').innerHTML=`<div class="goalStation ${ready?'ready':'locked'}"><div class="goalIcon">${ready?'⚡':'🔒'}</div><div><div class="small">ZIEL DES LERNPFADS</div><h3>${ready?'Hauptsystem bereit':'Hauptsystem gesperrt'}</h3><p>${ready?'Volt hat genügend Energie gesammelt. Das Hauptsystem kann gestartet werden.':`Für den Systemstart werden mindestens 90 % Energie benötigt.`}</p><div class="goalNeed">${ready?`${m}/${t} Aufgaben gemeistert`:`Noch ${left} ${left===1?'Aufgabe':'Aufgaben'} meistern · ${m}/${need} benötigt`}</div></div><button class="primary goalButton" ${ready?'':'disabled'} onclick="${ready?"openStory('ending')":''}">${ready?'⚡ Hauptsystem starten':'Noch gesperrt'}</button></div>`;
+}
+function renderMilestone(){
+ const done=quizzes.filter(q=>progressData[q.id]?.completed).length;
+ let msg='';
+ if(done>=8&&masteredSet().size<Math.ceil(totalQuestions()*.9))msg='Alle acht Module sind erreichbar. Für den Systemstart braucht Volt aber noch mehr Energie. Nutze das Fehlertraining.';
+ else if(done>=6)msg='Fast geschafft. Jetzt fehlen nur noch die schwierigsten Stromkreise.';
+ else if(done>=3)msg='Die Grundsysteme laufen wieder.';
+ document.getElementById('milestone').innerHTML=msg?`<div class="milestone">${voltSVG('ready',52)}<div><strong>Volt</strong>${msg}</div></div>`:'';
+}
+
+const quizzes=[
+{id:1,title:'Bauteile im Stromkreis',desc:'Batterie, Lampe, Schalter und ihre Funktionen',questions:[
+{tag:'Bauteile',q:'Welches Bauteil stellt elektrische Energie für einen einfachen Stromkreis bereit?',a:['Lampe','Batterie','Schalter','Leitung'],c:1,fb:'Die Batterie ist die Energiequelle des Stromkreises. Sie besitzt zwei Pole.'},
+{tag:'Schaltsymbol',q:'Welches Schaltsymbol steht für eine Lampe?',visual:`<div class="symbol-grid"><div class="visual visual-choice"><span class="choice-label">A</span>${bulb}</div><div class="visual visual-choice"><span class="choice-label">B</span>${battery}</div><div class="visual visual-choice"><span class="choice-label">C</span>${swOpen}</div><div class="visual visual-choice"><span class="choice-label">D</span>${motor}</div></div>`,a:['A','B','C','D'],c:0,fb:'Der Kreis mit einem Kreuz darin ist das übliche Schaltsymbol für eine Lampe.'},
+{tag:'Funktion',q:'Welche Aufgabe hat ein Schalter im Stromkreis?',a:['Er liefert elektrische Energie.','Er kann den Stromweg öffnen oder schließen.','Er wandelt elektrische Energie immer in Licht um.','Er verbindet automatisch Plus- und Minuspol.'],c:1,fb:'Ein Schalter unterbricht oder schließt einen leitenden Weg. Dadurch lässt sich der Stromkreis gezielt öffnen oder schließen.'},
+{tag:'Bauteile',q:'Welche Aufgabe haben die Leitungen?',a:['Sie verbinden die Bauteile elektrisch miteinander.','Sie erzeugen den elektrischen Strom.','Sie verhindern grundsätzlich den Stromfluss.','Sie ersetzen die Stromquelle.'],c:0,fb:'Leitungen stellen leitende Verbindungen zwischen den Bauteilen her.'},
+{tag:'Glühlampe',q:'Eine Glühlampe besitzt zwei elektrische Kontakte. Welche sind das?',visual:contactVisual(),a:['Glaskolben und Glühdraht','Fußkontakt und Metallgewinde/Seitenkontakt','Nur der Fußkontakt','Pluspol und Minuspol der Lampe'],c:1,fb:'Bei einer üblichen Glühlampe sind der Fußkontakt und das Metallgewinde bzw. der Seitenkontakt voneinander getrennte Anschlüsse.'},
+{tag:'Stromquelle',q:'Was ist mit den beiden Polen einer Batterie gemeint?',a:['Zwei verschiedene elektrische Anschlüsse','Zwei Schalter in der Batterie','Zwei Lampenanschlüsse','Zwei gleichartige Stellen ohne Bedeutung'],c:0,fb:'Die beiden Pole sind die unterschiedlichen Anschlüsse der Stromquelle. Für einen geschlossenen Stromkreis werden beide benötigt.'},
+{tag:'Schaltsymbol',q:'Welches Schaltsymbol ist gezeigt?',visual:`<div class="visual">${swOpen}</div>`,a:['Lampe','Schalter','Batterie','Klingel'],c:1,fb:'Das dargestellte Schaltsymbol zeigt einen Schalter. Die sichtbare Lücke zwischen den Kontakten zeigt zusätzlich, dass er geöffnet ist.'},
+{tag:'Anwendung',q:'Welche Zusammenstellung reicht grundsätzlich für einen einfachen Stromkreis mit schaltbarer Lampe?',a:['Batterie, Lampe, Schalter und Leitungen','Nur Lampe und Schalter','Batterie und zwei Schalter ohne Leitungen','Nur Batterie und Lampe ohne leitende Verbindung'],c:0,fb:'Wir brauchen eine Energiequelle, einen Verbraucher, leitende Verbindungen und für die Schaltbarkeit einen Schalter.'}
+]},
+{id:2,title:'Der geschlossene Stromkreis',desc:'Stromwege erkennen und Fehler finden',questions:[
+{tag:'Grundprinzip',q:'Wann kann eine Lampe in einem einfachen Stromkreis leuchten?',a:['Sobald sie neben einer Batterie liegt.','Wenn ein geschlossener leitender Weg über beide Batteriepole und beide Lampenkontakte besteht.','Nur wenn der Pluspol direkt die Lampe berührt.','Sobald irgendwo ein Kabel vorhanden ist.'],c:1,fb:'Entscheidend ist der vollständige geschlossene Stromweg: von einem Batteriepol durch die Lampe zurück zum anderen Batteriepol.'},
+{tag:'Schalter',q:'Leuchtet L1 in dieser Schaltung?',visual:circuit(true),a:['Ja','Nein'],c:1,fb:'Der Schalter ist geöffnet. Dadurch ist der einzige Stromweg unterbrochen.'},
+{tag:'Schalter',q:'Leuchtet L1 jetzt?',visual:circuit(false),a:['Ja','Nein'],c:0,fb:'Der Schalter ist geschlossen und es gibt einen vollständigen leitenden Weg durch die Lampe.'},
+{tag:'Fehlersuche',q:'Eine Lampe ist nur mit einem Kabel an den Pluspol einer Batterie angeschlossen. Was passiert?',a:['Sie leuchtet normal.','Sie leuchtet besonders hell.','Sie leuchtet nicht, weil kein geschlossener Stromkreis besteht.','Die Batterie wird dadurch automatisch ausgeschaltet.'],c:2,fb:'Eine einzelne Verbindung reicht nicht. Der Stromweg muss auch zum zweiten Batteriepol zurückführen.'},
+{tag:'Glühlampe',q:'Der Fußkontakt einer Lampe ist mit dem Pluspol verbunden, der Seitenkontakt mit dem Minuspol. Was ist bei intakter Lampe zu erwarten?',a:['Die Lampe kann leuchten.','Die Lampe kann grundsätzlich nicht leuchten.','Nur der Seitenkontakt wird warm.','Es fehlt immer ein dritter Anschluss.'],c:0,fb:'Beide getrennten Lampenkontakte sind mit unterschiedlichen Batteriepolen verbunden. Damit kann ein geschlossener Stromweg entstehen.'},
+{tag:'Denkfehler',q:'Eine Schaltung sieht auf dem Papier „unordentlich“ aus. Kann sie trotzdem funktionieren?',a:['Nein, Leitungen müssen rechteckig verlaufen.','Ja, entscheidend ist die elektrische Verbindung, nicht die Form der Zeichnung.','Nur wenn alle Kabel gleich lang sind.','Nur wenn die Batterie oben eingezeichnet ist.'],c:1,fb:'Die geometrische Form ist für den Stromweg unerheblich. Wichtig ist allein, welche Anschlüsse leitend miteinander verbunden sind.'},
+{tag:'Unterbrechung',q:'Was geschieht in einem einfachen Stromkreis, wenn eine Leitung vollständig durchtrennt wird?',a:['Die Lampe leuchtet weiter.','Der Stromweg ist unterbrochen und die Lampe erlischt.','Die Batterie liefert doppelt so viel Energie.','Der Schalter schließt sich automatisch.'],c:1,fb:'Eine Unterbrechung an irgendeiner Stelle des einzigen Stromwegs öffnet den gesamten Stromkreis.'},
+{tag:'Fehlersuche',q:'Schalter geschlossen, Batterie vorhanden, Lampe intakt – trotzdem leuchtet sie nicht. Welche Ursache ist möglich?',a:['Eine Leitung hat keinen elektrischen Kontakt.','Die Leitungen bilden einen geschlossenen Weg.','Beide Lampenkontakte sind korrekt angeschlossen.','Alle Verbindungen sind leitend.'],c:0,fb:'Ein schlechter oder fehlender Kontakt wirkt wie eine Unterbrechung. Dann ist der Stromkreis trotz geschlossenem Schalter nicht vollständig.'},
+{tag:'Stromweg',q:'Welche Beschreibung trifft einen funktionierenden einfachen Stromkreis am besten?',a:['Ein Weg endet an der Lampe.','Ein geschlossener leitender Weg verbindet die beiden Pole der Stromquelle über den Verbraucher.','Plus- und Minuspol dürfen niemals Teil desselben Stromkreises sein.','Der Schalter muss immer direkt an der Batterie sitzen.'],c:1,fb:'Der Kern ist der geschlossene leitende Weg zwischen den beiden Polen über den Verbraucher.'},
+{tag:'Transfer',q:'Der Schalter wird von der Stelle vor der Lampe an eine Stelle hinter der Lampe versetzt. Sonst bleibt alles gleich. Ändert sich seine grundsätzliche Wirkung?',a:['Ja, er funktioniert nur vor der Lampe.','Nein, auch dort kann er den einzigen Stromweg öffnen und schließen.','Ja, die Lampe leuchtet dann dauerhaft.','Nur bei sehr kurzen Leitungen.'],c:1,fb:'In einem unverzweigten Stromkreis kann der Schalter an verschiedenen Stellen liegen. Öffnet er den einzigen Stromweg, ist der gesamte Stromkreis unterbrochen.'}
+]},
+{id:3,title:'Schaltpläne & Schaltsymbole',desc:'Schaltungen lesen und eindeutig darstellen',questions:[
+{tag:'Schaltplan',q:'Warum verwendet man in Schaltplänen vereinfachte Schaltsymbole?',a:['Damit elektrische Schaltungen unabhängig vom Aussehen der echten Bauteile eindeutig dargestellt werden können.','Weil echte Bauteile grundsätzlich rund sind.','Damit keine Leitungen eingezeichnet werden müssen.','Damit man nicht erkennen kann, welche Bauteile verwendet werden.'],c:0,fb:'Standardisierte Symbole machen Schaltungen übersichtlich und eindeutig. Das tatsächliche Aussehen der Bauteile spielt dabei keine Rolle.'},
+{tag:'Symbol',q:'Welches Bauteil wird durch dieses Symbol dargestellt?',visual:`<div class="visual">${battery}</div>`,a:['Lampe','Batterie/Stromquelle','Motor','Schalter'],c:1,fb:'Die zwei unterschiedlich langen parallelen Striche kennzeichnen eine Zelle bzw. Stromquelle; der längere Strich steht üblicherweise für den Pluspol.'},
+{tag:'Symbol',q:'Welches Bauteil wird durch dieses Symbol dargestellt?',visual:`<div class="visual">${bulb}</div>`,a:['Lampe','Batterie','offener Schalter','Leitungsknoten'],c:0,fb:'Der Kreis mit Kreuz steht für eine Lampe.'},
+{tag:'Symbol',q:'Welches Bauteil wird durch dieses Symbol dargestellt?',visual:`<div class="visual">${swOpen}</div>`,a:['geschlossene Batterie','offener Schalter','Lampe','Motor'],c:1,fb:'Die sichtbare Lücke zwischen den Kontakten zeigt: Der Schalter ist geöffnet.'},
+{tag:'Lesen',q:'Was bedeutet eine durchgehende Linie zwischen zwei Bauteilen im Schaltplan normalerweise?',a:['Eine leitende Verbindung','Eine Lichtausbreitung','Eine mechanische Schnur','Eine Unterbrechung'],c:0,fb:'Linien stellen im Schaltplan elektrische Leitungen bzw. leitende Verbindungen dar.'},
+{tag:'Darstellung',q:'Muss ein Schaltplan die räumliche Anordnung der Bauteile auf dem Experimentiertisch exakt wiedergeben?',a:['Ja, immer millimetergenau.','Nein. Entscheidend sind die elektrischen Verbindungen.','Nur bei Batterien.','Nur bei geöffneten Schaltern.'],c:1,fb:'Ein Schaltplan beschreibt die elektrische Struktur, nicht die tatsächlichen Abstände oder Positionen der Bauteile.'},
+{tag:'Analyse',q:'Was zeigt dieser Schaltplan?',visual:circuit(false),a:['Eine Batterie, eine Lampe und einen geschlossenen Schalter in einem geschlossenen Stromkreis','Zwei Batterien ohne Lampe','Eine Parallelschaltung aus drei Lampen','Eine unterbrochene Leitung ohne Stromquelle'],c:0,fb:'Zu sehen sind Stromquelle, Lampe und geschlossener Schalter in einem einzigen geschlossenen Stromweg.'},
+{tag:'Schaltplan',q:'Welche Eigenschaft macht einen guten Schaltplan besonders nützlich?',a:['Er ist möglichst fotorealistisch.','Er zeigt eindeutig, welche Bauteile wie miteinander verbunden sind.','Er enthält möglichst viele Farben.','Alle Leitungen müssen gleich lang sein.'],c:1,fb:'Die zentrale Information eines Schaltplans ist die Verschaltung: Welche Anschlüsse sind elektrisch miteinander verbunden?'},
+{tag:'Symbol',q:'Ein Kreis mit dem Buchstaben M steht in einem Schaltplan typischerweise für …',visual:`<div class="visual">${motor}</div>`,a:['einen Motor','ein Messkabel','eine Batterie','eine Lampe'],c:0,fb:'Das M im Kreis kennzeichnet einen Elektromotor.'},
+{tag:'Transfer',q:'Zwei Schaltpläne sehen geometrisch unterschiedlich aus, zeigen aber dieselben Bauteile mit exakt denselben elektrischen Verbindungen. Was gilt?',a:['Sie beschreiben dieselbe Schaltung.','Nur der rechteckigere Plan ist richtig.','Sie müssen unterschiedliche Wirkungen haben.','Das lässt sich grundsätzlich nicht entscheiden.'],c:0,fb:'Schaltpläne dürfen unterschiedlich angeordnet sein. Sind alle elektrischen Verbindungen gleich, handelt es sich elektrisch um dieselbe Schaltung.'}
+]},
+{id:4,title:'Ein-Aus-Schaltung',desc:'Schalterstellungen und ihre Wirkung',questions:[
+{tag:'Interaktiv',type:'sim',kind:'single',q:'Bringe die Lampe zum Leuchten. Betätige dazu den Schalter und prüfe anschließend deine Einstellung.',target:{s1:true},fb:'Ein geschlossener Schalter schließt den einzigen Stromweg. Die Lampe kann dann leuchten.'},
+{tag:'Interaktiv',type:'sim',kind:'single',start:{s1:true},q:'Schalte die Lampe aus, ohne ein anderes Bauteil zu verändern.',target:{s1:false},fb:'Durch Öffnen des Schalters wird der Stromkreis unterbrochen.'},
+{tag:'Vorhersage',q:'Was geschieht mit der Lampe, wenn ein geschlossener Schalter in einem einfachen unverzweigten Stromkreis geöffnet wird?',a:['Sie wird heller.','Sie erlischt.','Sie leuchtet unverändert weiter.','Die Batterie wird zum Verbraucher.'],c:1,fb:'Der einzige Stromweg wird unterbrochen. Deshalb fließt durch die Lampe kein Strom mehr.'},
+{tag:'Position des Schalters',q:'Wo darf ein Ein-Aus-Schalter in einem einfachen unverzweigten Stromkreis grundsätzlich sitzen?',a:['Nur direkt am Pluspol.','Nur direkt vor der Lampe.','An verschiedenen Stellen des einzigen Stromwegs.','Nur direkt am Minuspol.'],c:2,fb:'Entscheidend ist nicht die Position, sondern dass der Schalter den einzigen Stromweg öffnen und schließen kann.'},
+{tag:'Schaltzeichen',q:'Welches Schaltzeichen zeigt einen geschlossenen Schalter?',visual:`<div class="symbol-grid"><div class="visual visual-choice"><span class="choice-label">A</span>${swOpen}</div><div class="visual visual-choice"><span class="choice-label">B</span>${swClosed}</div></div>`,a:['A','B'],c:1,fb:'Beim geschlossenen Schalter sind die beiden Kontakte leitend miteinander verbunden.'},
+{tag:'Fehlersuche',q:'Der Schalter ist geschlossen, die Lampe bleibt aber aus. Welche Aussage ist sinnvoll?',a:['Ein geschlossener Schalter garantiert allein noch keinen vollständigen Stromkreis.','Der Schalter muss deshalb immer kaputt sein.','Die Lampe kann in einem Stromkreis grundsätzlich nicht leuchten.','Man benötigt zwingend zwei Schalter.'],c:0,fb:'Auch Stromquelle, Lampe und alle Leitungsverbindungen müssen intakt und korrekt verbunden sein.'},
+{tag:'Transfer',q:'Eine Lampe soll mit genau einem Schalter unabhängig ein- und ausgeschaltet werden. Welche Grundidee braucht die Schaltung?',a:['Der Schalter muss den Stromweg zur Lampe öffnen oder schließen können.','Der Schalter muss die Batterie ersetzen.','Der Schalter wird parallel zur gesamten Batterie kurzgeschlossen.','Die Lampe benötigt drei Anschlüsse.'],c:0,fb:'Eine Ein-Aus-Schaltung beruht darauf, den Stromweg durch den Verbraucher gezielt zu schließen oder zu unterbrechen.'}
+]},
+{id:5,title:'UND- & ODER-Schaltung',desc:'Schaltlogik verstehen und anwenden',questions:[
+{tag:'UND · interaktiv',type:'sim',kind:'and',q:'Stelle die beiden Schalter so ein, dass die Lampe leuchtet.',target:{s1:true,s2:true},fb:'Bei zwei Schaltern in Reihe ist der Stromweg nur geschlossen, wenn S1 UND S2 geschlossen sind.'},
+{tag:'UND',q:'Zwei Schalter liegen in Reihe. Wann leuchtet die Lampe?',a:['Wenn mindestens ein Schalter geschlossen ist.','Nur wenn beide Schalter geschlossen sind.','Nur wenn beide Schalter offen sind.','Immer.'],c:1,fb:'In der Reihenschaltung müssen beide Unterbrechungsstellen geschlossen sein. Deshalb spricht man funktional von einer UND-Schaltung.'},
+{tag:'UND · Schalttabelle',q:'Welche Schalttabelle beschreibt eine UND-Schaltung richtig?',visual:truthTableChoice('and'),a:['Tabelle A','Tabelle B'],c:0,fb:'Bei der UND-Schaltung leuchtet die Lampe nur dann, wenn S1 und S2 gleichzeitig geschlossen sind. Genau das zeigt Tabelle A. Tabelle B beschreibt dagegen die ODER-Schaltung.'},
+{tag:'ODER · interaktiv',type:'sim',kind:'or',q:'Bringe die Lampe zum Leuchten, aber schließe dabei nur S2.',target:{s1:false,s2:true},fb:'Bei parallelen Schaltern genügt ein geschlossener Zweig. Hier stellt S2 allein den geschlossenen Stromweg her.'},
+{tag:'ODER',q:'Zwei Schalter liegen parallel zueinander. Wann leuchtet die Lampe?',a:['Nur wenn beide geschlossen sind.','Wenn mindestens einer der beiden Schalter geschlossen ist.','Nur wenn beide offen sind.','Nie.'],c:1,fb:'Ein geschlossener Parallelzweig reicht für einen vollständigen Stromweg. Das entspricht einer ODER-Schaltung.'},
+{tag:'ODER · Schalttabelle',q:'Welche Schalttabelle beschreibt eine ODER-Schaltung richtig?',visual:truthTableChoice('or'),a:['Tabelle A','Tabelle B'],c:1,fb:'Bei der ODER-Schaltung leuchtet die Lampe, sobald mindestens einer der beiden Schalter geschlossen ist. Das zeigt Tabelle B. Tabelle A beschreibt die UND-Schaltung.'},
+{tag:'Vergleich',q:'Woran erkennt man die UND-Schaltung im Schaltplan?',a:['Die beiden Schalter liegen im selben Stromweg hintereinander.','Die beiden Schalter liegen in zwei parallelen Zweigen.','Es gibt überhaupt keine Schalter.','Die Batterie besitzt drei Pole.'],c:0,fb:'Hintereinander geschaltete Schalter müssen beide geschlossen sein, damit der gemeinsame Stromweg vollständig ist.'},
+{tag:'Vergleich',q:'Woran erkennt man die ODER-Schaltung im Schaltplan?',a:['Die Schalter liegen zwingend direkt an der Lampe.','Die Schalter bilden alternative parallele Stromwege.','Die Schalter liegen immer in Reihe.','Es gibt zwei Batterien.'],c:1,fb:'Die parallelen Zweige bieten alternative Wege. Deshalb genügt ein geschlossener Schalter.'},
+{tag:'Interaktiv',type:'sim',kind:'or',start:{s1:true,s2:true},q:'Die Lampe soll weiterhin leuchten, aber genau einer der beiden Schalter soll geöffnet sein. Stelle eine passende Schalterkombination ein.',accept:[{s1:false,s2:true},{s1:true,s2:false}],fb:'Bei einer ODER-Schaltung darf einer der beiden parallelen Wege unterbrochen sein. Der andere geschlossene Zweig hält den Stromkreis geschlossen.'},
+{tag:'Transfer',q:'Eine Warnlampe soll nur dann leuchten, wenn Schalter S1 UND Schalter S2 geschlossen sind. Welche Schalteranordnung passt?',a:['S1 und S2 parallel','S1 und S2 in Reihe','Nur S1, S2 wird nicht angeschlossen','Beide Schalter werden durch Leitungen überbrückt'],c:1,fb:'„Nur wenn beide“ beschreibt die UND-Bedingung. Dafür liegen die beiden Schalter hintereinander im selben Stromweg.'},
+{tag:'Transfer',q:'Eine Lampe soll leuchten, sobald S1 ODER S2 geschlossen wird. Welche Schalteranordnung passt?',a:['S1 und S2 in Reihe','S1 und S2 parallel','Beide Schalter bleiben dauerhaft offen','Nur eine Batterie ohne Schalter'],c:1,fb:'Alternative parallele Stromwege setzen die ODER-Bedingung um.'},
+{tag:'Knobelaufgabe',q:'Bei einer ODER-Schaltung sind beide Schalter geschlossen. S1 wird geöffnet. Was geschieht?',a:['Die Lampe erlischt sofort.','Die Lampe bleibt an, weil der Zweig mit S2 weiterhin geschlossen ist.','Die Batterie verschwindet aus dem Stromkreis.','S2 öffnet sich automatisch mit.'],c:1,fb:'S2 stellt weiterhin einen vollständigen parallelen Stromweg bereit. Daher bleibt die Lampe eingeschaltet.'}
+]}
+,
+{id:6,title:'Reihen- & Parallelschaltung',desc:'Stromwege und Lampenausfälle',questions:[
+{tag:'Erkennen',q:'Welche Schaltungsart ist dargestellt?',visual:staticLampCircuit('series'),a:['Reihenschaltung','Parallelschaltung','ODER-Schaltung von Schaltern','Offener Stromkreis'],c:0,fb:'Beide Lampen liegen hintereinander im selben Stromweg. Es gibt keine Verzweigung: Das ist eine Reihenschaltung.'},
+{tag:'Erkennen',q:'Welche Schaltungsart ist dargestellt?',visual:staticLampCircuit('parallel'),a:['Reihenschaltung','Parallelschaltung','Ein-Aus-Schaltung mit nur einer Lampe','Unterbrochener Stromkreis'],c:1,fb:'An einem Knoten teilt sich der Stromweg in zwei Zweige mit je einer Lampe und vereinigt sich später wieder. Das ist eine Parallelschaltung.'},
+{tag:'Stromwege',q:'Welche Aussage beschreibt eine Reihenschaltung aus zwei Lampen richtig?',a:['Es gibt für jede Lampe einen vollständig eigenen Stromweg zur Quelle.','Beide Lampen liegen im selben unverzweigten Stromweg.','Eine der Lampen ist grundsätzlich überbrückt.','Zwischen den Lampen muss immer ein Schalter liegen.'],c:1,fb:'Bei der Reihenschaltung gibt es nur einen gemeinsamen Stromweg durch beide Lampen.'},
+{tag:'Stromwege',q:'Welche Aussage beschreibt eine Parallelschaltung aus zwei Lampen richtig?',a:['Beide Lampen liegen zwingend hintereinander.','Die Leitung besitzt keinerlei Verzweigung.','Die Lampen liegen in verschiedenen Zweigen zwischen gemeinsamen Knotenpunkten.','Nur eine der beiden Lampen ist mit der Stromquelle verbunden.'],c:2,fb:'Die Verzweigung ist das entscheidende Merkmal: Jede Lampe liegt in einem eigenen Zweig zwischen denselben Knotenpunkten.'},
+{tag:'Interaktiv · Reihe',type:'lampSim',kind:'series',q:'Drehe Lampe L1 heraus. Beobachte die Schaltung und prüfe anschließend den Zustand.',target:{l1:false,l2:true},fb:'Wird L1 aus der Reihenschaltung entfernt, ist der einzige Stromweg unterbrochen. Deshalb erlischt auch L2.'},
+{tag:'Reihe · Lampenausfall',q:'In einer Reihenschaltung aus L1 und L2 geht L1 kaputt und unterbricht den Stromweg. Was geschieht mit L2?',a:['L2 leuchtet weiter.','L2 erlischt ebenfalls.','L2 wird automatisch parallel geschaltet.','L2 ersetzt die Stromquelle.'],c:1,fb:'Es existiert nur ein Stromweg durch beide Lampen. Eine Unterbrechung an L1 unterbricht daher den gesamten Stromkreis.'},
+{tag:'Interaktiv · Parallel',type:'lampSim',kind:'parallel',q:'Drehe nur Lampe L1 heraus. Stelle die Schaltung entsprechend ein und prüfe sie.',target:{l1:false,l2:true},fb:'Der Zweig von L1 ist unterbrochen. Der Zweig mit L2 bildet aber weiterhin einen geschlossenen Stromweg, daher kann L2 weiterleuchten.'},
+{tag:'Parallel · Lampenausfall',q:'In einer Parallelschaltung aus L1 und L2 fällt L1 aus und unterbricht nur ihren eigenen Zweig. Was geschieht mit L2?',a:['L2 erlischt ebenfalls zwingend.','L2 kann weiterleuchten.','L2 wird aus der Fassung gedrückt.','Der zweite Zweig verschwindet automatisch.'],c:1,fb:'Der zweite Parallelzweig bleibt geschlossen. Deshalb ist der Stromweg durch L2 weiterhin vollständig.'},
+{tag:'Vergleich',q:'Welche Beobachtung eignet sich besonders gut, um eine Reihen- von einer Parallelschaltung zweier Lampen zu unterscheiden?',a:['Die Farbe der Leitungen','Ob die zweite Lampe nach dem Herausdrehen der ersten weiterleuchtet','Die räumliche Entfernung zwischen den Lampen','Ob die Batterie links oder rechts gezeichnet ist'],c:1,fb:'Der Lampenausfall zeigt, ob beide Verbraucher denselben einzigen Stromweg teilen oder unabhängige Parallelzweige besitzen.'},
+{tag:'Nicht vom Bild täuschen lassen',q:'Welche Schaltungsart ist hier dargestellt? Entscheide nach den elektrischen Verbindungen, nicht nach der geometrischen Form.',visual:staticLampCircuit('parallel',true),a:['Reihenschaltung, weil die Lampen nicht direkt nebeneinander gezeichnet sind','Parallelschaltung, weil beide Lampen zwischen denselben Verzweigungspunkten liegen','Offener Stromkreis','Zwei voneinander getrennte Stromkreise'],c:1,fb:'Die Form der Zeichnung ist unwichtig. Entscheidend sind die Knoten und Stromwege: Beide Lampen liegen in getrennten Zweigen zwischen gemeinsamen Knotenpunkten.'},
+{tag:'Transfer',q:'Zwei Lampen sollen so geschaltet werden, dass beim Ausfall einer Lampe die andere weiterhin leuchten kann. Welche Schaltung ist dafür geeignet?',a:['Reihenschaltung','Parallelschaltung','Eine Reihenschaltung mit zusätzlicher Unterbrechung','Ein Stromkreis ohne Stromquelle'],c:1,fb:'In der Parallelschaltung besitzt jede Lampe einen eigenen Zweig. Der Ausfall eines Zweiges muss den anderen daher nicht unterbrechen.'},
+{tag:'Transfer',q:'Bei einer Lichterkette liegen alle Lampen in einem einzigen Stromweg. Eine Lampe wird herausgedreht und alle anderen erlöschen. Welche Schlussfolgerung passt zu diesem Modell?',a:['Die Lampen sind in Reihe geschaltet.','Die Lampen sind parallel geschaltet.','Es gibt keine Stromquelle.','Jede Lampe besitzt einen unabhängigen Zweig.'],c:0,fb:'Dass eine einzige Unterbrechung alle Lampen ausschaltet, ist typisch für einen gemeinsamen unverzweigten Stromweg, also eine Reihenschaltung.'}
+]}
+,
+{id:7,title:'Stromkreise analysieren',desc:'Komplexere Schaltungen durchschauen',questions:[
+{tag:'Analysieren',q:'S1 ist geschlossen, S2 ist offen. Welche Lampen leuchten?',visual:staticAnalysisCircuit('branch',true,false),a:['Nur L1','L1 und L2','L1 und L3','L1, L2 und L3'],c:1,fb:'Über den oberen Zweig mit S1 und L2 existiert ein geschlossener Stromweg. Dieser führt außerdem durch L1. Der untere Zweig ist durch S2 unterbrochen.'},
+{tag:'Analysieren',q:'S1 und S2 sind geschlossen. Welche Lampen leuchten?',visual:staticAnalysisCircuit('branch',true,true),a:['Nur L1','Nur L2 und L3','L1, L2 und L3','Keine Lampe'],c:2,fb:'Beide Parallelzweige sind geschlossen. Der gemeinsame Stromweg führt zusätzlich durch L1, daher leuchten alle drei Lampen.'},
+{tag:'Interaktiv',type:'analysisSim',kind:'branch',q:'Stelle die Schalter so ein, dass genau L1 und L3 leuchten.',target:{s1:false,s2:true},fb:'S2 schließt den unteren Zweig mit L3. Dadurch fließt der Strom auch durch die vorgeschaltete L1. S1 muss offen bleiben, damit L2 aus bleibt.'},
+{tag:'Interaktiv',type:'analysisSim',kind:'branch',start:{s1:true,s2:true},q:'Stelle die Schaltung so ein, dass keine Lampe leuchtet.',accept:[{s1:false,s2:false}],fb:'Da L1 vor der Verzweigung liegt, genügt es hier nicht, nur einen Zweig zu öffnen. Beide Zweige müssen unterbrochen sein.'},
+{tag:'Gemeinsamer Verbraucher',q:'Welche Lampe liegt in dieser Schaltung im gemeinsamen Stromweg vor den beiden Zweigen?',visual:staticAnalysisCircuit('branch',false,false),a:['L1','L2','L3','L2 und L3 gemeinsam'],c:0,fb:'L1 liegt vor der Verzweigung. Jeder geschlossene Weg durch L2 oder L3 führt deshalb auch durch L1.'},
+{tag:'Hauptschalter',q:'S1 ist offen und S2 geschlossen. Welche Lampen leuchten?',visual:staticAnalysisCircuit('master',false,true),a:['Nur L1','Nur L2','L1 und L2','Keine Lampe'],c:3,fb:'S1 liegt vor der gesamten Verzweigung und unterbricht damit den gemeinsamen Zuleitungsweg. S2 kann allein keinen vollständigen Stromkreis herstellen.'},
+{tag:'Hauptschalter',q:'S1 ist geschlossen und S2 offen. Welche Lampen leuchten?',visual:staticAnalysisCircuit('master',true,false),a:['Nur L1','Nur L2','L1 und L2','Keine Lampe'],c:0,fb:'Der Zweig von L1 ist ohne zusätzlichen Schalter geschlossen. Der Zweig mit L2 wird dagegen durch den offenen S2 unterbrochen.'},
+{tag:'Interaktiv',type:'analysisSim',kind:'master',q:'Stelle die Schalter so ein, dass beide Lampen leuchten.',target:{s1:true,s2:true},fb:'S1 muss als Hauptschalter geschlossen sein. Zusätzlich muss S2 den Zweig von L2 schließen.'},
+{tag:'Funktion erkennen',q:'Welche Funktion hat S1 in der dargestellten Schaltung am treffendsten?',visual:staticAnalysisCircuit('master',false,false),a:['S1 schaltet nur L1.','S1 kann den Stromweg zu beiden Parallelzweigen gemeinsam unterbrechen.','S1 überbrückt L2.','S1 verbindet L1 und L2 zu einer Reihenschaltung.'],c:1,fb:'S1 liegt vor der Verzweigung. Wird er geöffnet, ist die Zuleitung zu beiden Zweigen unterbrochen.'},
+{tag:'Überbrückung',q:'S1 ist geschlossen und S2 offen. Welche Lampen leuchten?',visual:staticAnalysisCircuit('bypass',true,false),a:['Nur L1','Nur L2','L1 und L2','Keine Lampe'],c:2,fb:'Bei offenem S2 ist der Überbrückungszweig unterbrochen. Der geschlossene Stromweg führt nacheinander durch L1 und L2.'},
+{tag:'Überbrückung',q:'Nun wird bei geschlossenem S1 zusätzlich S2 geschlossen. Welche Aussage beschreibt die Schaltung?',visual:staticAnalysisCircuit('bypass',true,true),a:['L2 wird durch einen leitenden Zweig überbrückt.','L1 wird überbrückt.','Der gesamte Stromkreis wird geöffnet.','S1 wird automatisch geöffnet.'],c:0,fb:'Der geschlossene Zweig mit S2 verbindet die Knoten vor und hinter L2 direkt. L2 liegt damit an einer leitenden Überbrückung.'},
+{tag:'Interaktiv',type:'analysisSim',kind:'bypass',start:{s1:true,s2:false},q:'Betätige genau den Schalter, durch den L2 überbrückt wird, während L1 weiterleuchtet.',target:{s1:true,s2:true},fb:'S2 schließt den parallelen Leitungsweg um L2. S1 bleibt geschlossen, damit der Gesamtstromkreis weiterhin geschlossen ist.'},
+{tag:'Stromweg verfolgen',q:'Warum leuchtet L1 in der Überbrückungsschaltung weiter, wenn S1 und S2 geschlossen sind?',a:['L1 liegt außerhalb des gesamten Stromkreises.','Der Überbrückungszweig liegt nur um L2; der geschlossene Gesamtweg führt weiterhin durch L1.','S2 ist direkt parallel zu L1 geschaltet.','L1 benötigt grundsätzlich keinen geschlossenen Stromkreis.'],c:1,fb:'Die beiden Knoten des Überbrückungszweigs liegen vor und hinter L2. L1 befindet sich außerhalb dieser Überbrückung und bleibt Teil des geschlossenen Gesamtwegs.'},
+{tag:'Strategie',q:'Was ist beim Analysieren einer komplizierter gezeichneten Schaltung am wichtigsten?',a:['Zuerst prüfen, welche geschlossenen Stromwege von einem Pol der Quelle zum anderen existieren.','Nur zählen, wie viele Lampen gezeichnet sind.','Entscheiden, welche Leitung auf dem Blatt am längsten ist.','Bauteile, die weit auseinander gezeichnet sind, immer als parallel ansehen.'],c:0,fb:'Die elektrische Verbindung entscheidet. Verfolge mögliche geschlossene Wege und beachte dabei Verzweigungen, Knoten und offene Schalter.'},
+{tag:'Transfer',q:'In einer Schaltung liegt L1 vor einer Verzweigung. In den beiden Zweigen liegen L2 und L3. Was muss gelten, damit L1 leuchtet?',a:['Mindestens einer der beiden Zweige muss zusammen mit dem restlichen Stromkreis einen geschlossenen Weg bilden.','L2 und L3 müssen grundsätzlich beide ausgeschaltet sein.','Die beiden Zweige müssen immer gleichzeitig offen sein.','L1 muss parallel zur Stromquelle überbrückt werden.'],c:0,fb:'L1 liegt im gemeinsamen Teil. Sie kann nur dann Teil eines geschlossenen Stromwegs sein, wenn anschließend wenigstens ein Zweig den Weg zur Quelle vervollständigt.'}
+]}
+,
+{id:8,title:'Profi-Quiz',desc:'Transfer- und Knobelaufgaben',questions:[
+{tag:'Profi · Analyse',q:'S1 ist geschlossen, S2 ist offen. Welche Lampen leuchten?',visual:staticProCircuit('doubleSeries',true,false),a:['Nur L1','L1 und L2','L1, L2 und L3','Alle vier Lampen'],c:1,fb:'Nur der obere Parallelzweig ist geschlossen. In diesem Zweig liegen L1 und L2 in Reihe, daher leuchten beide. Der untere Zweig ist durch S2 unterbrochen.'},
+{tag:'Profi · Interaktiv',type:'proSim',kind:'doubleSeries',q:'Stelle die Schalter so ein, dass nur L3 und L4 leuchten.',target:{s1:false,s2:true},fb:'Der untere Zweig mit L3 und L4 muss geschlossen sein, der obere Zweig mit L1 und L2 dagegen offen.'},
+{tag:'Profi · Analyse',q:'Beide Schalter sind geschlossen. Welche Lampen leuchten?',visual:staticProCircuit('doubleSeries',true,true),a:['Nur L1 und L2','Nur L3 und L4','Alle vier Lampen','Keine Lampe'],c:2,fb:'Beide Parallelzweige sind geschlossen. Im oberen Zweig liegen L1 und L2, im unteren L3 und L4. Damit sind alle vier Lampen Teil geschlossener Stromwege.'},
+{tag:'Profi · Struktur',q:'Welche Beschreibung passt zur dargestellten Schaltung?',visual:staticProCircuit('doubleSeries',false,false),a:['Vier Lampen liegen alle in einem einzigen unverzweigten Stromweg.','Es gibt zwei parallele Zweige; in jedem Zweig liegen zwei Lampen in Reihe.','Alle vier Lampen sind einzeln parallel geschaltet.','S1 und S2 überbrücken jeweils eine Lampe.'],c:1,fb:'Zwischen denselben Verzweigungspunkten liegen zwei Zweige. Innerhalb jedes Zweigs werden nacheinander zwei Lampen durchlaufen.'},
+{tag:'Profi · Hauptschalter',q:'S1 ist geschlossen und S2 offen. Welche Lampen leuchten?',visual:staticProCircuit('crossControl',true,false),a:['Nur L1','Nur L2 und L3','L1, L2 und L3','Keine Lampe'],c:0,fb:'S1 schließt die gemeinsame Zuleitung. L1 liegt in einem eigenen geschlossenen Zweig. Der zweite Zweig mit L2 und L3 bleibt durch S2 unterbrochen.'},
+{tag:'Profi · Interaktiv',type:'proSim',kind:'crossControl',q:'Stelle die Schaltung so ein, dass alle drei Lampen leuchten.',target:{s1:true,s2:true},fb:'S1 muss als gemeinsamer Hauptschalter geschlossen sein. S2 schließt zusätzlich den Zweig, in dem L2 und L3 in Reihe liegen.'},
+{tag:'Profi · Folgern',q:'Bei geschlossenem S1 wird S2 geöffnet. Welche Lampen werden dadurch ausgeschaltet?',visual:staticProCircuit('crossControl',true,true),a:['Nur L1','Nur L2','L2 und L3','L1, L2 und L3'],c:2,fb:'S2 liegt nur im unteren Zweig. Dort liegen L2 und L3 hintereinander. L1 befindet sich in einem anderen Parallelzweig und bleibt eingeschaltet.'},
+{tag:'Profi · ODER',q:'S1 ist offen, S2 geschlossen. Welche Lampen leuchten?',visual:staticProCircuit('parallelSwitches',false,true),a:['Nur L1','Nur L2','L1 und L2','Keine Lampe'],c:2,fb:'Die beiden Schalter bilden alternative parallele Wege. Der geschlossene S2 genügt, um den anschließenden Stromweg durch L1 und L2 zu schließen.'},
+{tag:'Profi · Interaktiv',type:'proSim',kind:'parallelSwitches',start:{s1:true,s2:true},q:'Öffne genau einen der beiden Schalter so, dass beide Lampen trotzdem weiterleuchten.',accept:[{s1:false,s2:true},{s1:true,s2:false}],fb:'Da S1 und S2 parallel liegen, genügt einer der beiden geschlossenen Wege. Deshalb darf genau einer geöffnet werden, ohne die beiden Lampen auszuschalten.'},
+{tag:'Profi · Logik',q:'Welche logische Bedingung erfüllen S1 und S2 in der dargestellten Schaltung?',visual:staticProCircuit('parallelSwitches',false,false),a:['Beide müssen geschlossen sein: UND.','Mindestens einer muss geschlossen sein: ODER.','Beide müssen immer offen sein.','S1 muss geschlossen und S2 zwingend offen sein.'],c:1,fb:'Die Schalter liegen parallel und bilden alternative leitende Wege. Daher genügt S1 oder S2 oder beide.'},
+{tag:'Profi · Entwerfen',q:'Eine Lampe L1 soll immer leuchten, sobald der Hauptschalter S1 geschlossen ist. Zwei weitere Lampen L2 und L3 sollen zusätzlich gemeinsam mit S2 ein- und ausgeschaltet werden. Welche Struktur passt?',a:['S1 vor der Verzweigung; L1 in einem eigenen Zweig; S2 mit L2 und L3 in einem zweiten Zweig.','S2 vor der gesamten Schaltung und S1 nur in Reihe mit L1.','Alle drei Lampen und beide Schalter ausschließlich hintereinander.','L1 wird durch eine Leitung vollständig überbrückt.'],c:0,fb:'S1 muss die gesamte Schaltung freigeben. Danach braucht L1 einen eigenen Zweig, während S2 nur den zweiten Zweig mit L2 und L3 steuert.'},
+{tag:'Profi · Fehleranalyse',q:'Ein Schüler sagt: „Zwei Lampen sind parallel geschaltet, wenn sie im Schaltplan untereinander gezeichnet sind.“ Was ist daran falsch?',a:['Die Lage auf dem Papier entscheidet nicht; maßgeblich sind die elektrischen Knoten und Stromwege.','Parallelschaltungen dürfen nur waagerecht gezeichnet werden.','Lampen können grundsätzlich nicht parallel geschaltet werden.','Eine Parallelschaltung benötigt immer drei Batterien.'],c:0,fb:'Die geometrische Anordnung ist nur Darstellung. Parallel sind Bauteile, wenn sie in getrennten Zweigen zwischen denselben Knotenpunkten liegen.'},
+{tag:'Profi · Transfer',q:'In einer unbekannten Schaltung führt das Öffnen von S1 dazu, dass alle Lampen erlöschen. Welche Aussage lässt sich daraus am sichersten ableiten?',a:['S1 liegt in einem Stromweg, der für alle aktuell leuchtenden Lampen gemeinsam notwendig ist.','Alle Lampen müssen zwingend in Reihe liegen.','Es darf keine Verzweigung vorhanden sein.','S1 muss parallel zu jeder einzelnen Lampe liegen.'],c:0,fb:'Auch eine verzweigte Schaltung kann einen gemeinsamen Hauptschalter besitzen. Sicher folgt nur, dass der durch S1 unterbrochene Teil für alle zuvor geschlossenen Lampenwege notwendig war.'},
+{tag:'Profi · Transfer',q:'Beim Herausdrehen von L1 erlischt L2, während L3 weiterleuchtet. Welche Struktur ist damit vereinbar?',a:['L1 und L2 liegen gemeinsam in einem Zweig; L3 besitzt einen anderen geschlossenen Parallelzweig.','Alle drei Lampen liegen zwingend in Reihe.','L1, L2 und L3 sind jeweils völlig unabhängig und einzeln parallel geschaltet.','L3 liegt ausschließlich hinter der Unterbrechung durch L1.'],c:0,fb:'Wenn der Ausfall von L1 auch L2 betrifft, teilen diese beiden einen notwendigen Stromweg. Dass L3 weiterleuchtet, zeigt einen davon unabhängigen geschlossenen Zweig.'},
+{tag:'Profi · Strategie',q:'Du bekommst einen komplizierten Schaltplan mit mehreren Verzweigungen. Welche Vorgehensweise ist am zuverlässigsten?',a:['Von einem Pol der Quelle aus geschlossene Wege verfolgen, Schalterstellungen beachten und an Knoten die möglichen Zweige getrennt prüfen.','Nur die Anzahl der gezeichneten Leitungen zählen.','Zuerst alle Lampen als Reihenschaltung behandeln.','Nur betrachten, welche Bauteile auf gleicher Höhe gezeichnet sind.'],c:0,fb:'Systematisches Verfolgen geschlossener Stromwege funktioniert unabhängig davon, wie ungewöhnlich der Schaltplan geometrisch angeordnet ist.'}
+]}
+
+];
+const future=[];
+let state={quiz:null,index:0,selected:null,score:0,checked:false,order:[],wrong:[],correctRun:[],mode:'full'};
+let progressData=JSON.parse(localStorage.getItem('stromquiz_progress')||'{}');normalizeProgress();
+function save(){localStorage.setItem('stromquiz_progress',JSON.stringify(progressData))}
+function qKey(qid,idx){return `${qid}-${idx}`}
+function masteredSet(){
+  const s=new Set();
+  Object.values(progressData).forEach(p=>(p?.mastered||[]).forEach(x=>s.add(x)));
+  return s;
+}
+function totalQuestions(){return quizzes.reduce((s,q)=>s+q.questions.length,0)}
+function totalEnergy(){return masteredSet().size*10}
+function competenceName(qid){
+  if(qid<=3)return 'Grundlagen & Symbole';
+  if(qid<=5)return 'Schalten & Logik';
+  if(qid===6)return 'Reihe & Parallel';
+  return 'Analyse & Transfer';
+}
+function addMastered(qid,idx){
+  const p=progressData[qid]||(progressData[qid]={best:0,total:quizzes.find(q=>q.id===qid).questions.length,attempts:0,completed:false,mastered:[]});
+  if(!p.mastered)p.mastered=[];
+  const key=qKey(qid,idx);if(!p.mastered.includes(key))p.mastered.push(key);
+}
+function renderHome(){
+  document.getElementById('heroVolt').innerHTML=voltSVG('ready',260);
+  renderWorkshop();
+  const completed=quizzes.filter(q=>progressData[q.id]?.completed).length;
+  const mastered=masteredSet().size,total=totalQuestions(),pct=Math.round(mastered/total*100);
+  document.getElementById('overallText').textContent=`${completed} von ${quizzes.length} Missionen`;
+  document.getElementById('overallPct').textContent=`${pct} %`;
+  document.getElementById('overallFill').style.width=`${pct}%`;
+  document.getElementById('energyTotal').textContent=`⚡ ${totalEnergy()} EP`;
+  document.getElementById('masteredText').textContent=`${mastered} von ${total} Aufgaben gemeistert`;
+  document.getElementById('batteryText').textContent=`${totalEnergy()} / ${total*10} EP`;
+  document.getElementById('batteryFill').style.width=`${pct}%`;
+  const box=document.getElementById('cards');box.innerHTML='';
+  const stage={1:'1 · Grundlagen',4:'2 · Schalten',6:'3 · Verzweigen',7:'4 · Analysieren'};
+  quizzes.forEach(q=>{
+    if(stage[q.id]){const s=document.createElement('div');s.className='stageLabel';s.textContent=stage[q.id];box.appendChild(s)}
+    const p=progressData[q.id];const best=p?.best||0;const totalQ=q.questions.length;
+    const qm=(p?.mastered||[]).length;const qp=Math.round(qm/totalQ*100);
+    const d=document.createElement('div');d.className='card quizcard';
+    d.innerHTML=`<div class="num">Mission ${q.id}</div><div class="quizIcon">${quizIcon(q.id)}</div><h2>${q.title}</h2><div class="small">${q.desc}</div>
+      <div class="bar"><div class="fill" style="width:${qp}%"></div></div>
+      <div class="quizMeta"><span class="small">${qm}/${totalQ} gemeistert · Bestwert ${best}/${totalQ}</span></div>
+      <div class="cardAction"><span>${p?.completed?'<span class="doneBadge">✓ abgeschlossen</span>':'<span class="small">Noch offen</span>'}</span><span class="go">${p?.completed?'Wiederholen →':'Starten →'}</span></div>`;
+    d.onclick=()=>startQuiz(q.id);box.appendChild(d);
+  });
+  renderMilestone();renderGoal();
+  const mc=document.getElementById('missionComplete');
+  mc.innerHTML=completed===quizzes.length?`<div class="missionComplete">${voltSVG('celebrate',85)}<div><h3>Mission Stromkreis abgeschlossen</h3><div>${mastered} von ${total} Aufgaben gemeistert · ${totalEnergy()} Energiepunkte gesammelt.</div></div></div>`:'';
+}
+function startQuiz(id,indices=null){
+  const quiz=quizzes.find(x=>x.id===id);
+  const order=indices||quiz.questions.map((_,i)=>i);
+  state={quiz,index:0,selected:null,score:0,checked:false,order,wrong:[],correctRun:[],mode:indices?'errors':'full'};
+  document.getElementById('home').classList.add('hidden');document.getElementById('result').classList.add('hidden');document.getElementById('quiz').classList.remove('hidden');renderQuestion()
+}
+function currentQuestion(){return state.quiz.questions[state.order[state.index]]}
+function renderQuestion(){
+  const q=currentQuestion();state.selected=null;state.checked=false;
+  state.sim={s1:q.start?.s1===true,s2:q.start?.s2===true,l1:q.start?.l1!==false,l2:q.start?.l2!==false};
+  document.getElementById('progress').textContent=`Frage ${state.index+1} von ${state.order.length}${state.mode==='errors'?' · Fehlertraining':''}`;
+  document.getElementById('questionFill').style.width=`${Math.round((state.index+1)/state.order.length*100)}%`;
+  document.getElementById('energyMini').textContent=`⚡ ${state.score*10} EP`;
+  document.getElementById('miniVolt').innerHTML=voltSVG('think',54);
+  const lines=['Verfolge den Stromweg sorgfältig.','Achte auf offene Schalter und Verzweigungen.','Nicht die Form der Zeichnung entscheidet, sondern die Verbindung.','Prüfe jeden möglichen Weg von einem Pol zum anderen.'];
+  document.getElementById('voltLine').innerHTML=`<strong>Volt:</strong> ${lines[state.index%lines.length]}`;
+
+  document.getElementById('qtag').textContent=q.tag+(q.type?' · INTERAKTIV':'');document.getElementById('question').textContent=q.q;
+  const a=document.getElementById('answers');a.innerHTML='';
+  if(q.type==='proSim'){
+    document.getElementById('visual').innerHTML=proCircuit(q.kind,state.sim.s1,state.sim.s2);
+    a.innerHTML='<div class="small">Klicke die Schalter direkt im Schaltplan an. Prüfe anschließend deine Einstellung.</div>';
+    document.getElementById('check').textContent='Einstellung prüfen';document.getElementById('check').disabled=false;
+  }else if(q.type==='analysisSim'){
+    document.getElementById('visual').innerHTML=analysisCircuit(q.kind,state.sim.s1,state.sim.s2);
+    a.innerHTML='<div class="small">Klicke die Schalter direkt im Schaltplan an. Prüfe danach deine Einstellung.</div>';
+    document.getElementById('check').textContent='Einstellung prüfen';document.getElementById('check').disabled=false;
+  }else if(q.type==='lampSim'){
+    document.getElementById('visual').innerHTML=lampCircuit(q.kind,state.sim.l1,state.sim.l2);
+    a.innerHTML='<div class="small">Klicke direkt auf eine Lampe, um sie heraus- oder wieder hineinzudrehen. Prüfe danach deine Einstellung.</div>';
+    document.getElementById('check').textContent='Einstellung prüfen';document.getElementById('check').disabled=false;
+  }else if(q.type==='sim'){
+    document.getElementById('visual').innerHTML=interactiveCircuit(q.kind,state.sim.s1,state.sim.s2);
+    a.innerHTML='<div class="small">Verändere die Schalter direkt in der Schaltung. Wenn deine Einstellung passt, klicke auf „Einstellung prüfen“.</div>';
+    document.getElementById('check').textContent='Einstellung prüfen';
+    document.getElementById('check').disabled=false;
+  }else{
+    document.getElementById('visual').innerHTML=q.visual||'';
+    q.a.forEach((txt,i)=>{const b=document.createElement('button');b.className='answer';b.innerHTML=`<strong>${String.fromCharCode(65+i)}</strong>&nbsp;&nbsp;${txt}`;b.onclick=()=>selectAnswer(i);a.appendChild(b)});
+    document.getElementById('check').textContent='Antwort prüfen';document.getElementById('check').disabled=true;
+  }
+  document.getElementById('feedback').innerHTML='';document.getElementById('check').classList.remove('hidden');document.getElementById('next').classList.add('hidden')
+}
+function toggleSim(id){
+  if(state.checked)return;
+  state.sim[id]=!state.sim[id];
+  const q=currentQuestion();
+  document.getElementById('visual').innerHTML=interactiveCircuit(q.kind,state.sim.s1,state.sim.s2);
+}
+function togglePro(id){
+  if(state.checked)return;
+  state.sim[id]=!state.sim[id];
+  const q=currentQuestion();
+  document.getElementById('visual').innerHTML=proCircuit(q.kind,state.sim.s1,state.sim.s2);
+}
+function toggleAnalysis(id){
+  if(state.checked)return;
+  state.sim[id]=!state.sim[id];
+  const q=currentQuestion();
+  document.getElementById('visual').innerHTML=analysisCircuit(q.kind,state.sim.s1,state.sim.s2);
+}
+function toggleLamp(id){
+  if(state.checked)return;
+  state.sim[id]=!state.sim[id];
+  const q=currentQuestion();
+  document.getElementById('visual').innerHTML=lampCircuit(q.kind,state.sim.l1,state.sim.l2);
+}
+function selectAnswer(i){if(state.checked)return;state.selected=i;[...document.querySelectorAll('.answer')].forEach((b,j)=>b.classList.toggle('selected',j===i));document.getElementById('check').disabled=false}
+document.getElementById('check').onclick=()=>{
+  const q=currentQuestion();
+  let ok=false;
+
+  if(q.type==='proSim'){
+    if(q.accept){
+      ok=q.accept.some(t=>state.sim.s1===t.s1 && state.sim.s2===t.s2);
+    }else{
+      ok=Object.keys(q.target).every(k=>state.sim[k]===q.target[k]);
+    }
+  }else if(q.type==='analysisSim'){
+    if(q.accept){
+      ok=q.accept.some(t=>state.sim.s1===t.s1 && state.sim.s2===t.s2);
+    }else{
+      ok=Object.keys(q.target).every(k=>state.sim[k]===q.target[k]);
+    }
+  }else if(q.type==='lampSim'){
+    ok=Object.keys(q.target).every(k=>state.sim[k]===q.target[k]);
+  }else if(q.type==='sim'){
+    if(q.accept){
+      ok=q.accept.some(t=>state.sim.s1===t.s1 && state.sim.s2===t.s2);
+    }else{
+      ok=Object.keys(q.target).every(k=>state.sim[k]===q.target[k]);
+    }
+  }else{
+    if(state.selected===null)return;
+    const buttons=[...document.querySelectorAll('.answer')];
+    buttons.forEach((b,i)=>{
+      b.classList.remove('selected');
+      if(i===q.c)b.classList.add('correct');
+      if(i===state.selected&&i!==q.c)b.classList.add('wrong');
+    });
+    ok=state.selected===q.c;
+  }
+
+  state.checked=true;
+  const originalIndex=state.order[state.index];
+  if(ok){state.score++;state.correctRun.push(originalIndex);addMastered(state.quiz.id,originalIndex);save()}
+  else state.wrong.push(originalIndex);
+  document.getElementById('feedback').innerHTML=
+    `<div class="feedback ${ok?'ok':'bad'}"><strong>${ok?'✓ Richtig':'✗ Noch nicht richtig'}</strong><br>${q.fb}<span class="memory">${ok?'Merke: Entscheidend ist immer der tatsächlich geschlossene Stromweg.':'Lerntipp: Verfolge den Weg von einem Pol der Quelle zum anderen und prüfe jede Unterbrechung.'}</span></div>`;
+  document.getElementById('energyMini').textContent=`⚡ ${state.score*10} EP`;
+  document.getElementById('miniVolt').innerHTML=voltSVG(ok?'celebrate':'think',54);
+  document.getElementById('voltLine').innerHTML=ok
+    ? `<strong>Volt:</strong> +10 Energiepunkte. Stromweg gefunden!`
+    : `<strong>Volt:</strong> Kein Punktverlust. Lies die Erklärung und nimm den Stromweg noch einmal auseinander.`;
+  document.getElementById('check').classList.add('hidden');
+  document.getElementById('next').classList.remove('hidden');
+  document.getElementById('next').textContent=
+    state.index===state.order.length-1?'Auswertung':'Weiter →';
+};
+document.getElementById('next').onclick=()=>{if(state.index<state.order.length-1){state.index++;renderQuestion()}else finish()};
+function finish(){
+  const fullTotal=state.quiz.questions.length,total=state.order.length;
+  const old=progressData[state.quiz.id]||{best:0,total:fullTotal,attempts:0,completed:false,mastered:[]};
+  let best=old.best||0;
+  if(state.mode==='full') best=Math.max(best,state.score);
+  progressData[state.quiz.id]={...old,best,total:fullTotal,attempts:(old.attempts||0)+1,completed:state.mode==='full'?true:old.completed,last:state.score,mastered:progressData[state.quiz.id]?.mastered||old.mastered||[]};
+  save();
+  document.getElementById('quiz').classList.add('hidden');document.getElementById('result').classList.remove('hidden');
+  document.getElementById('score').textContent=`${state.score}/${total}`;
+  const r=state.score/total,pct=Math.round(r*100);
+  document.getElementById('resultTitle').textContent=state.mode==='errors'?'Fehlertraining abgeschlossen':r>=.9?'Stromkreis gemeistert!':r>=.7?'Starke Schaltung!':r>=.5?'Die Grundlage sitzt.':'Noch einmal Stromwege verfolgen.';
+  document.getElementById('resultText').textContent=r>=.9?`Sehr sicher gelöst. Volt hat ordentlich Energie gesammelt.`:r>=.7?`Das meiste sitzt. Die verbliebenen Fehler sind jetzt dein sinnvollster nächster Trainingsbereich.`:r>=.5?`Die Grundlagen tragen. Wiederhole gezielt die Aufgaben, bei denen der Stromweg noch nicht eindeutig war.`:`Nutze das Fehlertraining. Es zeigt dir nur die Aufgaben, die in diesem Durchgang noch nicht funktioniert haben.`;
+  document.getElementById('resultEnergy').textContent=`+${state.score*10} EP`;
+  document.getElementById('resultPct').textContent=`${pct} %`;
+  document.getElementById('resultBest').textContent=`${best}/${fullTotal}`;
+  document.getElementById('resultVolt').innerHTML=voltSVG(r>=.7?'celebrate':'ready',160);
+  const groups={};state.order.forEach(i=>{const name=competenceName(state.quiz.id);if(!groups[name])groups[name]={n:0,ok:0};groups[name].n++;if(state.correctRun.includes(i))groups[name].ok++});
+  document.getElementById('competencies').innerHTML=Object.entries(groups).map(([name,g])=>{const p=Math.round(g.ok/g.n*100);const label=p>=80?'sicher':p>=60?'auf gutem Weg':'noch üben';return `<div class="competency"><div class="competencyTop"><span>${name}</span><span>${label}</span></div><div class="bar"><div class="fill" style="width:${p}%"></div></div><div class="small" style="margin-top:6px">${g.ok} von ${g.n} Aufgaben richtig</div></div>`}).join('');
+  const eb=document.getElementById('errorsOnly');
+  if(state.wrong.length){eb.classList.remove('hidden');const wrong=[...new Set(state.wrong)];eb.textContent=`${wrong.length} ${wrong.length===1?'Fehler':'Fehler'} gezielt üben`;eb.onclick=()=>startQuiz(state.quiz.id,wrong)}else eb.classList.add('hidden');
+  document.getElementById('retry').onclick=()=>startQuiz(state.quiz.id);
+}
+function goHome(){document.getElementById('quiz').classList.add('hidden');document.getElementById('result').classList.add('hidden');document.getElementById('home').classList.remove('hidden');renderHome()}
+renderHome();
+if(!storyState.introSeen)setTimeout(()=>openStory('intro'),180);
+</script></body></html>
